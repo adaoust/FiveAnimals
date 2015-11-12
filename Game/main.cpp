@@ -1,9 +1,8 @@
-//
-//  main.cpp
-//  FiveAnimals
-//
-//  Created by Alex D'Aoust on 2015-11-12.
-//  Copyright (c) 2015 Alexandre D'Aoust - 7206757, Maxime Bélair - 7432263. All rights reserved.
+﻿//
+// Authors:
+// Alexandre D'Aoust - 7206757
+// Maxime Bélair - 7432263 
+// CSI2772 Project
 //
 
 #include <iostream>

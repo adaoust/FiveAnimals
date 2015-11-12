@@ -1,2 +1,10 @@
 FiveAnimals.xcodeproj
 FiveAnimals.xcodeproj/**
+*.opensdf
+*.sdf
+*.sln
+*.vcxproj
+*.filters
+*.suo
+Debug
+ClassDiagram.cd

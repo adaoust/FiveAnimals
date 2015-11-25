@@ -1,0 +1,7 @@
+-Split2 peut tu être 3/1 ex:
+	oo
+	ol
+-Si même animal a 2 match sur 2 cartes, compte pour 1 ou pour 2 (voir démo du projet)
+-Split4 avec 2 fois même animal. Ex:
+	ol
+	lo

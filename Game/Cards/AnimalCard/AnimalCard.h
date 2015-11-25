@@ -7,7 +7,7 @@
 #ifndef ANIMALCARD_H
 #define ANIMALCARD_H
 
-enum class Animal { BEAR, DEER, HARE, MOOSE, WOLF };
+enum class Animal { BEAR, DEER, HARE, MOOSE, WOLF, ALL };
 enum class Orientation { UP, DOWN };
 enum class EvenOdd { EVEN, ODD };
 
@@ -20,5 +20,12 @@ public:
 	virtual void setOrientation(Orientation o) { orientation = o; };
 	virtual void setRow(EvenOdd eo) { evenOdd = eo; };
 	virtual void printRow(EvenOdd) {};
+	virtual Animal getAnimal(int i, int j) {
+		if (orientation == Orientation::UP) {
+			return animals[i][j];
+		}else {			
+			return animals[i == 0 ? 1 : 0][j == 0 ? 1 : 0];
+		}
+	};
 };
-#endif 
+#endif

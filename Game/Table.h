@@ -15,6 +15,7 @@ using namespace std;
 class Table {
 protected:
 	shared_ptr<AnimalCard> ** table;
+	int match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int direction);
 public:
 	Table();
 	int addAt(shared_ptr<AnimalCard>, int row, int col);

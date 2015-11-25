@@ -14,7 +14,7 @@ class Deck : public std::vector<T> {
 public:
 	std::shared_ptr<T> draw() {
 		T last = back();
-		std::shared_ptr<T> ptr(new T(last));
+		std::shared_ptr<T> ptr = std::make_shared<T>(new T(last));
 		pop_back();
 		return  ptr;
 	};

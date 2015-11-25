@@ -6,6 +6,8 @@
 //
 #ifndef ANIMALCARD_H
 #define ANIMALCARD_H
+
+enum class Animal { BEAR, DEER, HARE, MOOSE, WOLF };
 enum class Orientation { UP, DOWN };
 enum class EvenOdd { EVEN, ODD };
 
@@ -13,14 +15,10 @@ class AnimalCard {
 protected:
 	Orientation orientation;
 	EvenOdd evenOdd;
-	//Array that contain the card information, the animals are displayed like that on the card:
-	// animal[0] animal[1]
-	// animal[2] animal[3]
-	char animal[4];
+	Animal animals [2][2];
 public:
 	virtual void setOrientation(Orientation o) { orientation = o; };
 	virtual void setRow(EvenOdd eo) { evenOdd = eo; };
-	//why pass EvenOdd in parameter ?! to complete later...
 	virtual void printRow(EvenOdd) {};
 };
 #endif 

@@ -4,12 +4,15 @@
 // Maxime Bélair - 7432263 
 // CSI2772 Project
 //
+
 #ifndef TABLE_H
 #define TABLE_H
+
 #include <string>
 #include <iostream>
 #include <memory>
-#include "Cards\AnimalCard\StartCard.h"
+
+#include "AnimalCards.h"
 
 using namespace std;
 class Table {

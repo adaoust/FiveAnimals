@@ -4,5 +4,12 @@
 // Maxime Bélair - 7432263 
 // CSI2772 Project
 //
-#include "Deck.h"
 
+#ifndef QUERYRESULT_H
+#define QUERYRESULT_H
+
+class QueryResult {
+
+};
+
+#endif

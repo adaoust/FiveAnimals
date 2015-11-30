@@ -4,13 +4,14 @@
 // Maxime Bélair - 7432263 
 // CSI2772 Project
 //
+
 #include "Table.h"
 
 //If direction = 0, card1 at the left of card2
 //If direction = 1, card1 at the top of card2
 //If direction = 2, card1 at the right of card2
 //If direction = 3, card1 at the bottom of card2
-int Table::match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int direction){
+int Table::match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int direction) {
 	int match = 0;
 	Animal animal1;
 	Animal animal2;
@@ -48,7 +49,7 @@ int Table::match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int
 	return match;
 }
 
-Table::Table(){
+Table::Table() {
 	table = new shared_ptr<AnimalCard> *[103];
 	for (int i = 0; i < 103; i++) {
 		table[i] = new shared_ptr<AnimalCard>[103];
@@ -56,7 +57,7 @@ Table::Table(){
 	table[52][52] = make_shared<AnimalCard>(StartCard());
 }
 
-int Table::addAt(shared_ptr<AnimalCard> card, int row, int col){
+int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 	int countMatch = 0;
 	countMatch += match(table[row][col - 1], card, 0);
 	countMatch += match(table[row][col + 1], card, 2);
@@ -72,26 +73,26 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col){
 }
 
 
-shared_ptr<AnimalCard> Table::pickAt(int row, int col){
+shared_ptr<AnimalCard> Table::pickAt(int row, int col) {
 	if (table[row][col]) {
 		shared_ptr<AnimalCard> temp = table[row][col];
-		table[row][col] = make_shared<AnimalCard>();
+		table[row][col] = NULL;
 		return temp;
 	}
 	else {
-		return make_shared<AnimalCard>();
+		return NULL;
 	}
 }
 
-shared_ptr<AnimalCard> Table::get(int row, int col){
+shared_ptr<AnimalCard> Table::get(int row, int col) {
 	if (table[row][col]) {
 		return table[row][col];
 	}
 	else {
-		return make_shared<AnimalCard>();
+		return NULL;
 	}
 }
 
-bool Table::win(string & animal){
+bool Table::win(string & animal) {
 	return false; //impossible to win HEHEHE
 }

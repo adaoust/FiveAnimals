@@ -4,22 +4,26 @@
 // Maxime Bélair - 7432263 
 // CSI2772 Project
 //
+
 #ifndef DECK_H
 #define DECK_H
+
 #include <vector>
 #include <memory>
 
+using namespace std;
+
 template <typename T>
-class Deck : public std::vector<T> {
+class Deck : public vector<shared_ptr<T>> {
+
 public:
-	std::shared_ptr<T> draw() {
-		T last = back();
-		std::shared_ptr<T> ptr = std::make_shared<T>(new T(last));
+
+	shared_ptr<T> draw() {
+		shared_ptr<T> ptr = back();
 		pop_back();
-		return  ptr;
+		return ptr;
 	};
 		
 };
+
 #endif
-
-

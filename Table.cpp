@@ -69,7 +69,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 	//variable temporaire pour savoir si les animaux aux positions 1,2,3 ou 4 ont un match
 	int count1 = 0, count2 = 0, count3 = 0, count4 = 0;
 
-	if (table[row][col-1] != nullptr && match(card->getAnimal(0, 0), table[row][col - 1]->getAnimal(0, 1)) || table[row-1][col] != nullptr && match(card->getAnimal(0, 0), table[row - 1][col]->getAnimal(1, 0))) {
+	if (col != 0 && table[row][col-1] != nullptr && match(card->getAnimal(0, 0), table[row][col - 1]->getAnimal(0, 1)) || row != 0 && table[row-1][col] != nullptr && match(card->getAnimal(0, 0), table[row - 1][col]->getAnimal(1, 0))) {
 		count1 = 1;
 		countMatch++;
 	}
@@ -78,7 +78,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 		count2 == 1;
 	}
 	else {
-		if (table[row - 1][col] != nullptr && match(card->getAnimal(0, 1),table[row - 1][col]->getAnimal(1, 1)) || table[row][col + 1] != nullptr && match(card->getAnimal(0, 1), table[row][col + 1]->getAnimal(0, 0))) {
+		if (row != 0 && table[row - 1][col] != nullptr && match(card->getAnimal(0, 1),table[row - 1][col]->getAnimal(1, 1)) || col != 102 && table[row][col + 1] != nullptr && match(card->getAnimal(0, 1), table[row][col + 1]->getAnimal(0, 0))) {
 			count2 = 1;
 			countMatch++;
 		}
@@ -89,7 +89,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 		count3 == 1;
 	}
 	else {
-		if (table[row][col - 1] != nullptr && match(card->getAnimal(1,0), table[row][col - 1]->getAnimal(1, 1)) || table[row + 1][col] != nullptr && match(card->getAnimal(1,0), table[row + 1][col]->getAnimal(0, 0))) {
+		if (col != 0 && table[row][col - 1] != nullptr && match(card->getAnimal(1,0), table[row][col - 1]->getAnimal(1, 1)) || row != 102 && table[row + 1][col] != nullptr && match(card->getAnimal(1,0), table[row + 1][col]->getAnimal(0, 0))) {
 			count3 = 1;
 			countMatch++;
 		}
@@ -104,7 +104,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 		count4 == 1;
 	}
 	else {
-		if (table[row][col + 1] != nullptr && match(card->getAnimal(1, 1), table[row][col + 1]->getAnimal(1, 0)) || table[row + 1][col] != nullptr && match(card->getAnimal(1, 1), table[row + 1][col]->getAnimal(0, 1))) {
+		if (col != 102 && table[row][col + 1] != nullptr && match(card->getAnimal(1, 1), table[row][col + 1]->getAnimal(1, 0)) || row != 102 && table[row + 1][col] != nullptr && match(card->getAnimal(1, 1), table[row + 1][col]->getAnimal(0, 1))) {
 			count4 = 1;
 			countMatch++;
 		}

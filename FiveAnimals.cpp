@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include "ActionCards.h"
 #include "AnimalCardFactory.h"
@@ -15,8 +16,6 @@
 #include "Table.h"
 
 using namespace std;
-
-
 
 int main() {
 	
@@ -36,6 +35,16 @@ int main() {
 		cout << "|---------------------------------------------|" << endl << endl;
 		bool ready = false;
 		cout << "Enter the players' names (Leave empty to start game):" << endl;
+		
+		// Random Secret Animal
+		vector<Animal> secretAnimals = vector<Animal>();
+		secretAnimals.push_back(Animal::BEAR);
+		secretAnimals.push_back(Animal::DEER);
+		secretAnimals.push_back(Animal::HARE);
+		secretAnimals.push_back(Animal::MOOSE);
+		secretAnimals.push_back(Animal::WOLF);
+		shuffle(begin(secretAnimals), end(secretAnimals), default_random_engine((int) time(0)));
+		
 		do {
 			cout << " >> Name: ";
 			string playerName;
@@ -46,7 +55,8 @@ int main() {
 					if (players[i]->getName() == playerName) nameValid = false;
 				}
 				if (nameValid) {
-					players[numPlayers] = new Player(playerName, Animal::BEAR);
+					players[numPlayers] = new Player(playerName, secretAnimals.back());
+					secretAnimals.pop_back();
 					numPlayers++;
 				} else {
 					cout << " >> This name is already choosen!" << endl;
@@ -117,6 +127,11 @@ int main() {
 							qr.append(player->getName());
 						}
 						
+						// Needs the amount of players
+						if (dynamic_cast<MooseAction*>(actionCard)) {
+							qr.append(to_string(numPlayers));
+						}
+							
 						actionCard->perfom(table, players, qr);
 						player->getHand() -= cardPtr;
 						turnOver = true;

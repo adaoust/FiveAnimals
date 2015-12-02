@@ -7,14 +7,14 @@
 
 #include "Player.h"
 
-//why return ?!?! dis is stupid
+
 void Player::swapSecretAnimal(Animal& animal) {
 	Animal temp = animal;
 	animal = secretAnimal;
 	secretAnimal = temp;
 }
 
-Animal Player::getSecretAnimal() {
+Animal & Player::getSecretAnimal() {
 	return secretAnimal;
 }
 
@@ -23,4 +23,10 @@ void Player::print() {
     cout << "Secret Animal: " << AnimalCard::getAnimalString(secretAnimal) << endl;
     cout << "Hand: " << endl << endl;
     hand.print();
+}
+
+void Player::swapHand(Hand & h){
+	Hand temp = hand;
+	hand = h;
+	h = temp;
 }

@@ -9,7 +9,7 @@
 
 #include "ActionCards.h"
 #include "AnimalCards.h"
-
+#include <algorithm>
 AnimalCardFactory::AnimalCardFactory() {
 
 	_deck = Deck<AnimalCard>();

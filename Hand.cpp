@@ -15,7 +15,7 @@ Hand& Hand::operator += (shared_ptr<AnimalCard> card) {
 Hand& Hand::operator -= (shared_ptr<AnimalCard> card) {
 	long sizeBefore = _cards.size();
 	_cards.remove(card);
-	if (sizeBefore == _cards.size()) throw "MissingCardException";
+	if (sizeBefore == _cards.size()) throw string("MissingCardException");
 	return *this;
 }
 
@@ -23,7 +23,7 @@ shared_ptr<AnimalCard> Hand::operator [] (int index) {
 	if (_cards.size() > index) {
 		return *next(_cards.begin(), index);
 	}
-	else throw "IndexOutOfBoundsException";
+	else throw string("IndexOutOfBoundsException");
 }
 
 int Hand::numCards() {

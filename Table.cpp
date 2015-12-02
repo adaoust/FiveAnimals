@@ -106,7 +106,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 		table[row][col] = card;
         setRange();
 	} else {
-		throw "IllegalPlacementException";
+		throw string("IllegalPlacementException");
 	}
 	return countMatch;
 }
@@ -156,7 +156,7 @@ void Table::print() {
                     get(row, col).get()->printRow(EvenOdd::ODD);
                 } else cout << "  ";
             }
-            cout << endl << endl;
+            if (row != maxRow + 1) cout << endl << endl;
         }
     }
     cout << endl;

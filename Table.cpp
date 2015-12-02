@@ -14,10 +14,10 @@
 //If direction = 3, card1 at the bottom of card2
 int Table::match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int direction) {
 	int match = 0;
-    Animal animal1;
-	Animal animal2;
-	Animal animal3;
-	Animal animal4;
+    Animal animal1 = (Animal) NULL;
+	Animal animal2 = (Animal) NULL;
+	Animal animal3 = (Animal) NULL;
+	Animal animal4 = (Animal) NULL;
 	switch (direction) {
 	case 0:
 		animal1 = card1->getAnimal(0, 1);
@@ -43,12 +43,6 @@ int Table::match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int
 		animal3 = card1->getAnimal(0, 1);
 		animal4 = card2->getAnimal(1, 1);
 		break;
-    default:
-        animal1 = (Animal) NULL;
-        animal2 = (Animal) NULL;
-        animal3 = (Animal) NULL;
-        animal4 = (Animal) NULL;
-        break;
 	}
     
 	if (animal1 == animal2) match++;
@@ -137,6 +131,8 @@ shared_ptr<AnimalCard> Table::get(int row, int col) {
 }
 
 void Table::print() {
+    // Printing column and row numbers for clarity.
+    // Also adding a column and row at the end of the table.
     cout << "Table: " << endl << endl;
     for (int row = minRow - 2; row < maxRow + 2; row++) {
         if (row == minRow - 2) {

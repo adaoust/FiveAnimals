@@ -15,55 +15,51 @@
 
 using namespace std;
 
+
+
 int main() {
 	
-	Deck<AnimalCard> deck = AnimalCardFactory::getFactory()->getDeck();
-	
-	Table table = Table();
-	
+	Deck<AnimalCard> deck;
+	Table table;
 	Player * players [5];
+	int numPlayers;
+	bool playing;
 	
-	players[0] = new Player("PlayerOne", Animal::BEAR);
-	players[1] = new Player("PlayerTwo", Animal::DEER);
+	{ // Setup
+		deck = AnimalCardFactory::getFactory()->getDeck();
+		table = Table();
+		playing = true;
+		players[0] = new Player("PlayerOne", Animal::BEAR);
+		players[1] = new Player("PlayerTwo", Animal::DEER);
+		numPlayers = 2;
+		for (int i = 0; i < numPlayers && playing; i++) {
+			Player * player = players[i];
+			player->getHand() += deck.draw();
+			player->getHand() += deck.draw();
+			player->getHand() += deck.draw();
+		}
+	}
 	
-	(*players)->getHand() += deck.draw();
-	players[0]->getHand() += deck.draw();
-	players[0]->getHand() += deck.draw();
-	players[0]->getHand() += deck.draw();
-	players[0]->getHand() += deck.draw();
-	players[0]->getHand() += deck.draw();
-	
-	players[1]->getHand() += deck.draw();
-	players[1]->getHand() += deck.draw();
-	players[1]->getHand() += deck.draw();
-	
-	players[0]->print();
-	cout << endl;
-	players[1]->print();
-	cout << endl;
-	
-	table.addAt(deck.draw(), 51, 52);
-	table.addAt(deck.draw(), 52, 51);
-	table.addAt(deck.draw(), 53, 52);
-	table.addAt(deck.draw(), 52, 53);
-	
-	table.print();
-	
-	//string s;
-	//cin >> s;
+	while (playing) {
+		// Check for Pause.
+		for (int i = 0; i < numPlayers && playing; i++) {
+			Player * player = players[i];
+			cout << player->getName() << "'s Turn!" << endl;
+			player->getHand() += deck.draw();
+			cout << endl;
+			table.print();
+			player->print();
+			bool turnOver = true;
+			do {
+				try {
+					// Player's Turn.
+				} catch (string e) {
+					turnOver = false;
+				}
+				// Check for win and change playing to false if someone wins.
+				playing = false;
+			} while (!turnOver);
+		}
+	}
 	return 0;
 }
-
-//    00 01 02 03 04 05
-//
-// 00
-//
-//
-// 01    ww bb       mm
-//       ww bb       mm
-//
-// 02       dd cc ww wm
-//          dd cc dd wm
-//
-// 03
-//

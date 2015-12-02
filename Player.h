@@ -38,6 +38,7 @@ public:
     
     void print();
     Hand& getHand() { return hand; }
+    string getName() { return playerName; }
 
 };
 

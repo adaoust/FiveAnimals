@@ -91,10 +91,10 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	catch (...) {
 		throw string("Invalid Coordinates");
 	}
-	if (table.get(x0, y0) == nullptr) {
+	if (table.get(y0, x0) == nullptr) {
 		throw string("There is no card at the position (" + to_string(x0) + "," + to_string(y0) + ")");
 	}
-	shared_ptr<AnimalCard> card = table.pickAt(x0, y0);
+	shared_ptr<AnimalCard> card = table.pickAt(y0, x0);
 	try {
 		table.addAt(card, y1, x1);
 	}
@@ -114,7 +114,7 @@ QueryResult MooseAction::query() {
 
 void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult) {
 	for (int i = 1; i < 5; i++) {
-		if (players[i] != nullptr) {
+		if (players[i]->getName() != "") {
 			players[i]->swapSecretAnimal(players[0]->getSecretAnimal());
 		}
 	}

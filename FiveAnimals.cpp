@@ -59,9 +59,9 @@ int main() {
 		} while (numPlayers < 5 && !ready);
 		for (int i = 0; i < numPlayers && playing; i++) {
 			Player * player = players[i];
-			player->getHand() += deck.draw();
-			player->getHand() += deck.draw();
-			player->getHand() += deck.draw();
+			for (int j = 0; j < 3; j++) {
+				player->getHand() += deck.draw();
+			}
 		}
 	}
 	cout << endl;

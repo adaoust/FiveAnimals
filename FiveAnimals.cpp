@@ -107,7 +107,7 @@ int main() {
 					AnimalCard* card = cardPtr.get();
 					
 					if (ActionCard* actionCard = dynamic_cast<ActionCard*>(card)) {
-						
+						cout << endl;
 						QueryResult qr = actionCard->query();
 						
 						// Append the Current player's name to the result for perform to use.
@@ -163,9 +163,14 @@ int main() {
 							}
 						} while (!cardNumValid);
 						
-						table.addAt(cardPtr, cardY, cardX);
+						int matches = table.addAt(cardPtr, cardY, cardX);
 						
 						player->getHand() -= cardPtr;
+						
+						for (int i = 0; i < matches; i++) {
+							player->getHand() += deck.draw();
+						}
+						
 						turnOver = true;
 					}
 					
@@ -173,6 +178,8 @@ int main() {
 					cout << " >> " << e << endl;
 					turnOver = false;
 				}
+				
+				cout << endl;
 				// Check for win and change playing to false if someone wins.
 				//playing = false;
 			} while (!turnOver);

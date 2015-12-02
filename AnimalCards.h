@@ -39,7 +39,7 @@ public:
     static string getAnimalString(const Animal animal);
 	static char getAnimalChar(const Animal animal);
 	virtual void setOrientation(Orientation o) { _orientation = o; };
-	virtual void setRow(EvenOdd eo) { _evenOdd = eo; };
+	//virtual void setRow(EvenOdd eo) { _evenOdd = eo; }; Pas besoin, il y a le parametre directement dans printRow
 	virtual void printRow(EvenOdd);
 	virtual Animal getAnimal(int i, int j) {
 		if (_orientation == Orientation::UP) return _animals[i][j];

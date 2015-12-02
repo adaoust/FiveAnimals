@@ -10,7 +10,7 @@
 
 #include <string>
 #include <iostream>
-
+#include <memory>
 #include "AnimalCards.h"
 
 using namespace std;
@@ -32,7 +32,7 @@ private:
 protected:
     
 	shared_ptr<AnimalCard> ** table;
-	int match(shared_ptr<AnimalCard> card1, shared_ptr<AnimalCard> card2, int direction);
+	bool match(Animal, Animal);
     
 public:
     

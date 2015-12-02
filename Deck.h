@@ -19,8 +19,8 @@ class Deck : public vector<shared_ptr<T>> {
 public:
 
 	shared_ptr<T> draw() {
-		shared_ptr<T> ptr = back();
-		pop_back();
+        shared_ptr<T> ptr = vector<shared_ptr<T>>::back();
+		vector<shared_ptr<T>>::pop_back();
 		return ptr;
 	};
 		

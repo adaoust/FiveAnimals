@@ -8,19 +8,19 @@
 #include "Player.h"
 
 //why return ?!?! dis is stupid
-string Player::swapSecretAnimal(string & animal) {
-	string temp = animal;
+void Player::swapSecretAnimal(Animal& animal) {
+	Animal temp = animal;
 	animal = secretAnimal;
 	secretAnimal = temp;
-	return secretAnimal;
 }
 
-string Player::getSecretAnimal() {
+Animal Player::getSecretAnimal() {
 	return secretAnimal;
 }
 
 void Player::print() {
 	cout << "Player Name: " << playerName << endl;
-	cout << "Secret Animal: " << secretAnimal << endl;
-	//	cout << "Hand: " << endl  << hand.print();
+    cout << "Secret Animal: " << AnimalCard::getAnimalString(secretAnimal) << endl;
+    cout << "Hand: " << endl;
+    hand.print();
 }

@@ -9,24 +9,28 @@
 
 #include "ActionCards.h"
 #include "AnimalCards.h"
-#include <algorithm>
-#include <random>
 
 AnimalCardFactory::AnimalCardFactory() {
-
-	// Seed for random permutations of cards.
-	srand((int) time(0));
 
 	_deck = Deck<AnimalCard>();
 	_deck.push_back(make_shared<AnimalCard>(Joker()));
 
-	// Create 5 ActionCards.
-	_deck.push_back(make_shared<BearAction>(BearAction()));
-	_deck.push_back(make_shared<DeerAction>(DeerAction()));
-	_deck.push_back(make_shared<HareAction>(HareAction()));
-	_deck.push_back(make_shared<MooseAction>(MooseAction()));
-	_deck.push_back(make_shared<WolfAction>(WolfAction()));
-
+	// Create 15 ActionCards.
+    for (int i = 0; i < 3; i++) {
+        _deck.push_back(make_shared<BearAction>(BearAction()));
+        _deck.push_back(make_shared<DeerAction>(DeerAction()));
+        _deck.push_back(make_shared<HareAction>(HareAction()));
+        _deck.push_back(make_shared<MooseAction>(MooseAction()));
+        _deck.push_back(make_shared<WolfAction>(WolfAction()));
+    }
+    
+    // Create 5 NoSplit Cards.
+    _deck.push_back(make_shared<NoSplit>(NoSplit(Animal::BEAR)));
+    _deck.push_back(make_shared<NoSplit>(NoSplit(Animal::DEER)));
+    _deck.push_back(make_shared<NoSplit>(NoSplit(Animal::HARE)));
+    _deck.push_back(make_shared<NoSplit>(NoSplit(Animal::MOOSE)));
+    _deck.push_back(make_shared<NoSplit>(NoSplit(Animal::WOLF)));
+    
 	// Create 10 SplitTwo Cards.
 	_deck.push_back(make_shared<SplitTwo>(SplitTwo(Animal::BEAR, Animal::DEER)));
 	_deck.push_back(make_shared<SplitTwo>(SplitTwo(Animal::DEER, Animal::HARE)));
@@ -84,6 +88,6 @@ AnimalCardFactory::AnimalCardFactory() {
 	_deck.push_back(make_shared<SplitFour>(SplitFour(Animal::MOOSE, Animal::DEER, Animal::BEAR, Animal::WOLF)));
 	_deck.push_back(make_shared<SplitFour>(SplitFour(Animal::WOLF, Animal::HARE, Animal::DEER, Animal::BEAR)));
 
-	shuffle(begin(_deck), end(_deck), default_random_engine());
+	shuffle(begin(_deck), end(_deck), default_random_engine((int) time(0)));
 
 }

@@ -8,6 +8,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "Hand.h"
+#include "AnimalCards.h"
+
 #include <string>
 #include <iostream>
 
@@ -18,18 +21,23 @@ class Player {
 protected:
 
 	string playerName;
-	string secretAnimal;
-	//Hand hand;
+	Animal secretAnimal;
+	Hand hand;
 
 public:
 
-	Player(string name, string animal) {
+    // Asked the teacher to change secret animal from string to Animal.
+	Player(string name, Animal animal) {
 		playerName = name;
 		secretAnimal = animal;
+        hand = Hand();
 	}
-	string swapSecretAnimal(string&);
-	string getSecretAnimal();
-	void print();
+    
+	void swapSecretAnimal(Animal&);
+	Animal getSecretAnimal();
+    
+    void print();
+    Hand& getHand() { return hand; }
 
 };
 

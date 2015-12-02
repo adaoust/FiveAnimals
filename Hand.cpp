@@ -36,12 +36,14 @@ void Hand::print() {
 		cout << setfill('0') << setw(2) << (i + 1) << setfill(' ') << setw(1) << ' ';
 	}
 	cout << endl;
-	for (int i = 0; numCards(); i++) {
+	for (int i = 0; i < numCards(); i++) {
 		(*this)[i]->printRow(EvenOdd::EVEN);
+        cout << " ";
 	}
 	cout << endl;
-	for (int i = 0; numCards(); i++) {
-		(*this)[i]->printRow(EvenOdd::ODD);
+	for (int i = 0; i < numCards(); i++) {
+        (*this)[i]->printRow(EvenOdd::ODD);
+        cout << " ";
 	}
 	cout << endl;
 

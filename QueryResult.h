@@ -9,7 +9,27 @@
 #define QUERYRESULT_H
 
 class QueryResult {
-
+    
+private:
+    
+    vector<string> result;
+    
+public:
+    
+    QueryResult() {
+        result = vector<string>();
+    };
+    
+    void append(string str) {
+        result.push_back(str);
+    }
+    
+    string getNext() {
+        string next = result.back();
+        result.pop_back();
+        return next;
+    }
+    
 };
 
 #endif

@@ -35,8 +35,9 @@ protected:
 	}
 
 public:
-
-	static char getAnimalChar(Animal animal);
+    
+    static string getAnimalString(const Animal animal);
+	static char getAnimalChar(const Animal animal);
 	virtual void setOrientation(Orientation o) { _orientation = o; };
 	virtual void setRow(EvenOdd eo) { _evenOdd = eo; };
 	virtual void printRow(EvenOdd);
@@ -49,7 +50,7 @@ public:
 
 
 class NoSplit : public AnimalCard {
-protected: NoSplit(Animal a0) : AnimalCard(a0, a0, a0, a0) {}
+public: NoSplit(Animal a0) : AnimalCard(a0, a0, a0, a0) {}
 };
 
 class SplitTwo : public AnimalCard {

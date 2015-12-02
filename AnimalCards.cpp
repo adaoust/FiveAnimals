@@ -11,7 +11,20 @@
 
 using namespace std;
 
-char AnimalCard::getAnimalChar(Animal animal) {
+string AnimalCard::getAnimalString(const Animal animal) {
+    switch (animal) {
+        case Animal::BEAR: return "Bear";
+        case Animal::DEER: return "Deer";
+        case Animal::HARE: return "Hare";
+        case Animal::MOOSE: return "Moose";
+        case Animal::WOLF: return "Wolf";
+        case Animal::JOKER: return "Joker";
+        case Animal::START: return "Start";
+        default: return " ";
+    }
+}
+
+char AnimalCard::getAnimalChar(const Animal animal) {
 	switch (animal) {
 	case Animal::BEAR: return 'b';
 	case Animal::DEER: return 'd';
@@ -27,10 +40,10 @@ char AnimalCard::getAnimalChar(Animal animal) {
 void AnimalCard::printRow(EvenOdd evenOdd) {
 	switch (evenOdd) {
 	case EvenOdd::EVEN:
-		cout << getAnimalChar(_animals[0][0]) << getAnimalChar(_animals[0][1]);
+		cout << getAnimalChar(getAnimal(0,0)) << getAnimalChar(getAnimal(0,1));
 		break;
 	case EvenOdd::ODD:
-		cout << getAnimalChar(_animals[1][0]) << getAnimalChar(_animals[1][1]);
+		cout << getAnimalChar(getAnimal(1,0)) << getAnimalChar(getAnimal(1,1));
 		break;
 	default: 
 		cout << "  ";

@@ -19,7 +19,7 @@ private:
 
 	AnimalCardFactory(); // Prevents creation
 	AnimalCardFactory(const AnimalCardFactory&) {} // Prevents copy constructor
-	AnimalCardFactory& operator= (const AnimalCardFactory&) {} // Prevents Assignment
+	//AnimalCardFactory& operator= (const AnimalCardFactory&) {} // Prevents Assignment
 
 	Deck<AnimalCard> _deck;
 

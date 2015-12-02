@@ -34,12 +34,12 @@ public:
 	}
     
 	void swapSecretAnimal(Animal&);
-	Animal getSecretAnimal();
+	Animal & getSecretAnimal();
     
     void print();
     Hand& getHand() { return hand; }
+	void swapHand(Hand&);
     string getName() { return playerName; }
-
 };
 
 #endif

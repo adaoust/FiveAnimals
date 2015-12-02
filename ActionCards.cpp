@@ -7,13 +7,21 @@
 
 #include "ActionCards.h"
 
+Player& findPlayerByName(Player ** player, string name) {
+	for (int i = 0; i < 5; i++) {
+		if (player[i]->getName() == name) {
+			return *player[i];
+		}
+	}
+	throw "Player Name Not Found";
+}
 void ActionCard::printRow(EvenOdd evenOdd) {
 	switch (evenOdd) {
 	case EvenOdd::EVEN:
-		cout << (char) toupper(getAnimalChar(_animals[0][0])) << (char) toupper(getAnimalChar(_animals[0][1]));
+		cout << (char)toupper(getAnimalChar(_animals[0][0])) << (char)toupper(getAnimalChar(_animals[0][1]));
 		break;
 	case EvenOdd::ODD:
-		cout << (char) toupper(getAnimalChar(_animals[1][0])) << (char) toupper(getAnimalChar(_animals[1][1]));
+		cout << (char)toupper(getAnimalChar(_animals[1][0])) << (char)toupper(getAnimalChar(_animals[1][1]));
 		break;
 	default:
 		cout << "  ";
@@ -22,52 +30,126 @@ void ActionCard::printRow(EvenOdd evenOdd) {
 
 // Bear Action.
 QueryResult BearAction::query() {
-    cout << "Bear Action!" << endl << " -> Enter the name of the player you wish to exchange your hand with: ";
-    string playerName = "";
-    cin >> playerName;
-    QueryResult qr = QueryResult();
-    qr.append(playerName);
-    // Why can't we verify ?
+	cout << "Bear Action!" << endl << " -> Enter the name of the player you wish to exchange your hand with: ";
+	string playerName = "";
+	getline(cin, playerName);
+	QueryResult qr = QueryResult();
+	qr.append(playerName);
 	return qr;
 }
 
-void BearAction::perfom(Table& table, Player* players, QueryResult queryResult) {
-    string playerName = queryResult.getNext();
-    // What is player ?
-}
- 
-// Deer Action.
-QueryResult DeerAction::query() {
-    cout << "Deer Action!" << endl << " -> Enter the name of the player you wish to exchange your secret animal with: ";
-	return QueryResult();
+void BearAction::perfom(Table& table, Player** players, QueryResult queryResult) {
+	Player p1 = findPlayerByName(players, queryResult.getNext());
+	Player p2 = findPlayerByName(players, queryResult.getNext());
+	p1.swapHand(p2.getHand());
 }
 
-void DeerAction::perfom(Table& table, Player* players, QueryResult queryResult) {
+// Deer Action.
+QueryResult DeerAction::query() {
+	cout << "Deer Action!" << endl << " -> Enter the name of the player you wish to exchange your secret animal with: ";
+	string playerName = "";
+	getline(cin, playerName);
+	QueryResult qr = QueryResult();
+	qr.append(playerName);
+	return qr;
+}
+
+void DeerAction::perfom(Table& table, Player** players, QueryResult queryResult) {
+	Player p1 = findPlayerByName(players, queryResult.getNext());
+	Player p2 = findPlayerByName(players, queryResult.getNext());
+	p1.swapSecretAnimal(p2.getSecretAnimal());
 }
 
 // Hare Action.
 QueryResult HareAction::query() {
-    cout << "Hare Action!" << endl << " -> Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where: ";
+	QueryResult qr = QueryResult();
+	cout << "Hare Action!" << endl << " -> Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where: ";
+	cout << " -> Enter 'x0' :";
+	string coordinate;
+	getline(cin, coordinate);
+	qr.append(coordinate);
+	cout << " -> Enter 'y0' :";
+	getline(cin, coordinate);
+	qr.append(coordinate);
+	cout << " -> Enter 'x1' :";
+	getline(cin, coordinate);
+	qr.append(coordinate);
+	cout << " -> Enter 'y1' :";
+	getline(cin, coordinate);
+	qr.append(coordinate);
 	return QueryResult();
 }
 
-void HareAction::perfom(Table& table, Player* players, QueryResult queryResult) {
+void HareAction::perfom(Table& table, Player** players, QueryResult queryResult) {
+	int x0, x1, y0, y1;
+	try {
+		y1 = stoi(queryResult.getNext());
+		x1 = stoi(queryResult.getNext());
+		y0 = stoi(queryResult.getNext());
+		x0 = stoi(queryResult.getNext());
+	}
+	catch (...) {
+		throw string("Invalid Coordinates");
+	}
+	if (table.get(x0, y0) == nullptr) {
+		throw string("There is no card at the position (" + to_string(x0) + "," + to_string(y0) + ")");
+	}
+	if (table.get(x1, y1) != nullptr) {
+		throw string("There is already a card at the position (" + to_string(x1) + "," + to_string(y1) + ")");
+	}
+	shared_ptr<AnimalCard> card = table.pickAt(x0, y0);
+	try {
+		table.addAt(card, y1, x1);
+	}
+	catch (string e) {
+		table.addWithoutCheck(card, y0, x0);
+		throw e;
+	}
+
+
 }
 
 // Moose Action.
 QueryResult MooseAction::query() {
-    cout << "Moose Action!" << endl << " -> Secret animals are rotating!" << endl;
+	cout << "Moose Action!" << endl << " -> Secret animals are rotating!" << endl;
 	return QueryResult();
 }
 
-void MooseAction::perfom(Table& table, Player* players, QueryResult queryResult) {
+void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult) {
+	for (int i = 1; i < 5; i++) {
+		if (players[i] != nullptr) {
+			players[i]->swapSecretAnimal(players[0]->getSecretAnimal());
+		}
+	}
 }
 
 // Wolf Action.
 QueryResult WolfAction::query() {
-    cout << "Wolf Action!" << endl << " -> Enter the location 'x,y' of the card you want to put in your hand: ";
-	return QueryResult();
+	QueryResult qr;
+	cout << "Wolf Action!" << endl << " -> Enter the location 'x,y' of the card you want to put in your hand: ";
+	cout << " -> Enter 'x' :";
+	string coordinate;
+	getline(cin, coordinate);
+	qr.append(coordinate);
+	cout << " -> Enter 'y' :";
+	getline(cin, coordinate);
+	qr.append(coordinate);
+	return qr;
 }
 
-void WolfAction::perfom(Table& table, Player* players, QueryResult queryResult) {
+void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult) {
+	Player p = findPlayerByName(players, queryResult.getNext());
+	int x, y;
+	try {
+		y = stoi(queryResult.getNext());
+		x = stoi(queryResult.getNext());
+	}
+	catch (...) {
+		throw string("Invalid Coordinates");
+	}
+
+	if (table.get(x, y) == nullptr) {
+		throw string("There is no card at the position (" + to_string(x) + "," + to_string(y) + ")");
+	}
+	p.getHand() += table.pickAt(y, x);
 }

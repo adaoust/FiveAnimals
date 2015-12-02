@@ -47,7 +47,7 @@ int main() {
 			cout << player->getName() << "'s Turn!" << endl;
 			player->getHand() += deck.draw();
 			cout << endl;
-			table.print();
+			table.print();			
 			player->print();
 			bool turnOver = true;
 			do {

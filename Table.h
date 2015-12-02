@@ -37,6 +37,7 @@ protected:
 public:
     
 	Table();
+	void addWithoutCheck(shared_ptr<AnimalCard>, int row, int col);
 	int addAt(shared_ptr<AnimalCard>, int row, int col);
 	shared_ptr<AnimalCard> pickAt(int row, int col);
 	shared_ptr<AnimalCard> get(int row, int col);

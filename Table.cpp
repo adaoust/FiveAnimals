@@ -23,6 +23,20 @@ Table::Table() {
 	maxRow = 0, maxCol = 0;
 	setRange();
 }
+/*
+This function is called with action card, there is a possibility when a player
+want to play the HareAction (move a card on another emplacement) and he moves the card
+so the card match itself (move by one tile). To prevent this, we have to remove the card
+from the board before adding it at the other location. The problem is if someone play the
+WolfAction (remove a card from the table) before and the card we want to move is disconnected, 
+we won't be able to insert the card again. So we will call this function that will allow us 
+to put a card on the table without performing any check 
+(note it's only in that particular case we will use this function)
+*/
+void Table::addWithoutCheck(shared_ptr<AnimalCard> card, int row, int col){
+	table[row][col] = card;
+	setRange();
+}
 
 void Table::setRange() {
 	for (int i = 0; i < 103; i++) {
@@ -108,6 +122,7 @@ shared_ptr<AnimalCard> Table::pickAt(int row, int col) {
 	if (table[row][col]) {
 		shared_ptr<AnimalCard> temp = table[row][col];
 		table[row][col] = NULL;
+		setRange();
 		return temp;
 	}
 	else {

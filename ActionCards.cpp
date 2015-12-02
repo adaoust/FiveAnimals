@@ -77,7 +77,7 @@ QueryResult HareAction::query() {
 	cout << " >> Enter 'y1' :";
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	return QueryResult();
+	return qr;
 }
 
 void HareAction::perfom(Table& table, Player** players, QueryResult queryResult) {

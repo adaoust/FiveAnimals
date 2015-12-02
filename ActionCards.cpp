@@ -63,18 +63,18 @@ void DeerAction::perfom(Table& table, Player** players, QueryResult queryResult)
 // Hare Action.
 QueryResult HareAction::query() {
 	QueryResult qr = QueryResult();
-	cout << "Hare Action!" << endl << " -> Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where: ";
-	cout << " -> Enter 'x0' :";
+	cout << "Hare Action!" << endl << " -> Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where: " << endl;
+	cout << " >> Enter 'x0' :";
 	string coordinate;
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " -> Enter 'y0' :";
+	cout << " >> Enter 'y0' :";
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " -> Enter 'x1' :";
+	cout << " >> Enter 'x1' :";
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " -> Enter 'y1' :";
+	cout << " >> Enter 'y1' :";
 	getline(cin, coordinate);
 	qr.append(coordinate);
 	return QueryResult();
@@ -123,12 +123,12 @@ void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult
 // Wolf Action.
 QueryResult WolfAction::query() {
 	QueryResult qr;
-	cout << "Wolf Action!" << endl << " -> Enter the location 'x,y' of the card you want to put in your hand: ";
-	cout << " -> Enter 'x' :";
+	cout << "Wolf Action!" << endl << " -> Enter the location 'x,y' of the card you want to put in your hand: " << endl;
+	cout << " >> Enter 'x' :";
 	string coordinate;
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " -> Enter 'y' :";
+	cout << " >> Enter 'y' :";
 	getline(cin, coordinate);
 	qr.append(coordinate);
 	return qr;

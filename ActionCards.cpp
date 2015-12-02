@@ -94,9 +94,6 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	if (table.get(x0, y0) == nullptr) {
 		throw string("There is no card at the position (" + to_string(x0) + "," + to_string(y0) + ")");
 	}
-	if (table.get(x1, y1) != nullptr) {
-		throw string("There is already a card at the position (" + to_string(x1) + "," + to_string(y1) + ")");
-	}
 	shared_ptr<AnimalCard> card = table.pickAt(x0, y0);
 	try {
 		table.addAt(card, y1, x1);

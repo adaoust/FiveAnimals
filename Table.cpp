@@ -52,7 +52,9 @@ void Table::setRange() {
 }
 
 int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
-
+	if (table[row][col] != nullptr) {
+		throw string("IllegalPlacementException");
+	}
 	int countMatch = 0;
 	if (card->getAnimal(0, 0) == Animal::JOKER) {
 		countMatch += (table[row - 1][col] == nullptr) ? 0 : 1;

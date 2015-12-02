@@ -117,7 +117,7 @@ int main() {
 							qr.append(player->getName());
 						}
 						
-						actionCard->perfom(table, *players, qr);
+						actionCard->perfom(table, players, qr);
 						player->getHand() -= cardPtr;
 						turnOver = true;
 						

@@ -21,7 +21,7 @@ protected:
 public:
 	virtual void printRow(EvenOdd);
 	virtual QueryResult query() = 0;
-	virtual void perfom(Table&, Player*, QueryResult) = 0;
+	virtual void perfom(Table&, Player**, QueryResult) = 0;
 };
 
 class BearAction : public ActionCard {

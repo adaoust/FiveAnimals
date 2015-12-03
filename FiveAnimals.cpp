@@ -139,7 +139,7 @@ int main() {
 							//remove current player name in qr
 							qr.getNext();
 							//get player2 from qr
-							Player * temp = findPlayerByName(players, qr.getNext());
+							Player * temp = findPlayerByName(players, qr.getNext(), numPlayers);
 							//remove bear card from player2's hand
 							temp->getHand() -= cardPtr;
 						}

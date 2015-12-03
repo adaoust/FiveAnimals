@@ -13,7 +13,7 @@
 #include "Table.h"
 #include "Player.h"
 
-Player * findPlayerByName(Player ** player, string name);
+Player * findPlayerByName(Player ** player, string name, int numPlayer);
 
 class ActionCard : public NoSplit {
 

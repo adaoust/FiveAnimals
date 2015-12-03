@@ -69,7 +69,7 @@ int main() {
 		} while (numPlayers < 5 && !ready);
 		for (int i = 0; i < numPlayers && playing; i++) {
 			Player * player = players[i];
-			for (int j = 0; j < 15; j++) {
+			for (int j = 0; j < 3; j++) {
 				player->getHand() += deck.draw();
 			}
 		}
@@ -124,6 +124,7 @@ int main() {
 							dynamic_cast<DeerAction*>(actionCard) ||
 							dynamic_cast<WolfAction*>(actionCard)) {
 							qr.append(player->getName());
+							qr.append(to_string(numPlayers));
 						}
 						
 						// Needs the amount of players

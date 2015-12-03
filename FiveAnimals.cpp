@@ -153,10 +153,11 @@ int main() {
 						int cardX, cardY;
 						
 						cout << " >> Enter the coordinates 'x,y' of where you want to place the selected card" << endl;
-						cout << " >> Enter 'x': ";
+						
 						
 						bool cardXValid = false;
 						do {
+							cout << " >> Enter 'x': ";
 							getline(cin, cardXStr);
 							try {
 								cardX = stoi(cardXStr);
@@ -167,14 +168,15 @@ int main() {
 							}
 							if (cardXValid && (cardX < 0 || cardX >= 103)) {
 								cout << " >> '" << cardX << "' is outside the table!" << endl;
-								cardNumValid = false;
+								cardXValid = false;
 							}
-						} while (!cardNumValid);
+						} while (!cardXValid);
 						
-						cout << " >> Enter 'y': ";
+						
 						
 						bool cardYValid = false;
 						do {
+							cout << " >> Enter 'y': ";
 							getline(cin, cardYStr);
 							try {
 								cardY = stoi(cardYStr);
@@ -185,9 +187,9 @@ int main() {
 							}
 							if (cardYValid && (cardY < 0 || cardY >= 103)) {
 								cout << " >> '" << cardY << "' is outside the table!" << endl;
-								cardNumValid = false;
+								cardYValid = false;
 							}
-						} while (!cardNumValid);
+						} while (!cardYValid);
 						
 						int matches = table.addAt(cardPtr, cardY, cardX);
 						

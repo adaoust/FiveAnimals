@@ -117,7 +117,6 @@ int main() {
 					AnimalCard* card = cardPtr.get();
 					
 					if (ActionCard* actionCard = dynamic_cast<ActionCard*>(card)) {
-						cout << endl;
 						QueryResult qr = actionCard->query();
 						
 						// Append the Current player's name to the result for perform to use.
@@ -134,7 +133,6 @@ int main() {
 							
 						actionCard->perfom(table, players, qr);
 						player->getHand() -= cardPtr;
-						turnOver = true;
 						
 					} else {
 						
@@ -186,11 +184,13 @@ int main() {
 							player->getHand() += deck.draw();
 						}
 						
-						turnOver = true;
 					}
 					
+					turnOver = true;
+					cout << endl << player->getName() << "'s Turn is over.." << endl;
+					
 				} catch (string e) {
-					cout << " >> " << e << endl;
+					cout << " >> [" << e << "]: It seems that an error ocured, play your turn again!";
 					turnOver = false;
 				}
 				

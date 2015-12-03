@@ -13,7 +13,7 @@ Player& findPlayerByName(Player ** player, string name) {
 			return *player[i];
 		}
 	}
-	throw "Player Name Not Found";
+	throw string("InvalidPlayerNameException");
 }
 void ActionCard::printRow(EvenOdd evenOdd) {
 	switch (evenOdd) {
@@ -30,8 +30,9 @@ void ActionCard::printRow(EvenOdd evenOdd) {
 
 // Bear Action.
 QueryResult BearAction::query() {
-	cout << "Bear Action!" << endl << " -> Enter the name of the player you wish to exchange your hand with: ";
-	string playerName = "";
+	cout << " >> [~ Bear Action ~]: Enter the name of the player you wish to exchange your hand with." << endl;
+	cout << " >> Name: ";
+    string playerName = "";
 	getline(cin, playerName);
 	QueryResult qr = QueryResult();
 	qr.append(playerName);
@@ -46,8 +47,9 @@ void BearAction::perfom(Table& table, Player** players, QueryResult queryResult)
 
 // Deer Action.
 QueryResult DeerAction::query() {
-	cout << "Deer Action!" << endl << " -> Enter the name of the player you wish to exchange your secret animal with: ";
-	string playerName = "";
+	cout << " >> [~ Deer Action ~]: Enter the name of the player you wish to exchange your secret animal with." << endl;
+	cout << " >> Name: ";
+    string playerName = "";
 	getline(cin, playerName);
 	QueryResult qr = QueryResult();
 	qr.append(playerName);
@@ -63,18 +65,18 @@ void DeerAction::perfom(Table& table, Player** players, QueryResult queryResult)
 // Hare Action.
 QueryResult HareAction::query() {
 	QueryResult qr = QueryResult();
-	cout << "Hare Action!" << endl << " -> Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where: " << endl;
-	cout << " >> Enter 'x0' :";
+	cout << " >> [~ Hare Action ~]: Enter the coordinates 'x0,y0,x1,y1' of which card you want to move and where." << endl;
+	cout << " >> Enter 'x0': ";
 	string coordinate;
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " >> Enter 'y0' :";
+	cout << " >> Enter 'y0': ";
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " >> Enter 'x1' :";
+	cout << " >> Enter 'x1': ";
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " >> Enter 'y1' :";
+	cout << " >> Enter 'y1': ";
 	getline(cin, coordinate);
 	qr.append(coordinate);
 	return qr;
@@ -89,12 +91,12 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 		x0 = stoi(queryResult.getNext());
 	}
 	catch (...) {
-		throw string("Invalid Coordinates");
+		throw string("InvalidCoordinatesException");
 	}
-	if (table.get(x0, y0) == nullptr) {
-		throw string("There is no card at the position (" + to_string(x0) + "," + to_string(y0) + ")");
+	if (table.get(y0, x0) == nullptr) {
+		throw string("NoSuchCardException");
 	}
-	shared_ptr<AnimalCard> card = table.pickAt(x0, y0);
+	shared_ptr<AnimalCard> card = table.pickAt(y0, x0);
 	try {
 		table.addAt(card, y1, x1);
 	}
@@ -108,7 +110,7 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 
 // Moose Action.
 QueryResult MooseAction::query() {
-	cout << "Moose Action!" << endl << " -> Secret animals are rotating!" << endl;
+	cout << " >> [~ Moose Action ~]: Secret animals rotate!" << endl;
 	return QueryResult();
 }
 
@@ -123,12 +125,12 @@ void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult
 // Wolf Action.
 QueryResult WolfAction::query() {
 	QueryResult qr;
-	cout << "Wolf Action!" << endl << " -> Enter the location 'x,y' of the card you want to put in your hand: " << endl;
-	cout << " >> Enter 'x' :";
+	cout << " >> [~ Wolf Action ~]: Enter the location 'x,y' of the card you want to put in your hand." << endl;
+	cout << " >> Enter 'x': ";
 	string coordinate;
 	getline(cin, coordinate);
 	qr.append(coordinate);
-	cout << " >> Enter 'y' :";
+	cout << " >> Enter 'y': ";
 	getline(cin, coordinate);
 	qr.append(coordinate);
 	return qr;
@@ -142,11 +144,11 @@ void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult)
 		x = stoi(queryResult.getNext());
 	}
 	catch (...) {
-		throw string("Invalid Coordinates");
+		throw string("InvalidCoordinatesException");
 	}
 
-	if (table.get(x, y) == nullptr) {
-		throw string("There is no card at the position (" + to_string(x) + "," + to_string(y) + ")");
+	if (table.get(y, x) == nullptr) {
+		throw string("NoSuchCardException");
 	}
 	p.getHand() += table.pickAt(y, x);
 }

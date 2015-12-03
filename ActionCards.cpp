@@ -7,10 +7,10 @@
 
 #include "ActionCards.h"
 
-Player& findPlayerByName(Player ** player, string name) {
+Player * findPlayerByName(Player ** player, string name) {
 	for (int i = 0; i < 5; i++) {
 		if (player[i]->getName() == name) {
-			return *player[i];
+			return player[i];
 		}
 	}
 	throw string("InvalidPlayerNameException");
@@ -32,7 +32,7 @@ void ActionCard::printRow(EvenOdd evenOdd) {
 QueryResult BearAction::query() {
 	cout << " >> [~ Bear Action ~]: Enter the name of the player you wish to exchange your hand with." << endl;
 	cout << " >> Name: ";
-    string playerName = "";
+	string playerName = "";
 	getline(cin, playerName);
 	QueryResult qr = QueryResult();
 	qr.append(playerName);
@@ -40,16 +40,16 @@ QueryResult BearAction::query() {
 }
 
 void BearAction::perfom(Table& table, Player** players, QueryResult queryResult) {
-	Player p1 = findPlayerByName(players, queryResult.getNext());
-	Player p2 = findPlayerByName(players, queryResult.getNext());
-	p1.swapHand(p2.getHand());
+	Player * p1 = findPlayerByName(players, queryResult.getNext());
+	Player * p2 = findPlayerByName(players, queryResult.getNext());
+	p1->swapHand(p2->getHand());
 }
 
 // Deer Action.
 QueryResult DeerAction::query() {
 	cout << " >> [~ Deer Action ~]: Enter the name of the player you wish to exchange your secret animal with." << endl;
 	cout << " >> Name: ";
-    string playerName = "";
+	string playerName = "";
 	getline(cin, playerName);
 	QueryResult qr = QueryResult();
 	qr.append(playerName);
@@ -57,9 +57,9 @@ QueryResult DeerAction::query() {
 }
 
 void DeerAction::perfom(Table& table, Player** players, QueryResult queryResult) {
-	Player p1 = findPlayerByName(players, queryResult.getNext());
-	Player p2 = findPlayerByName(players, queryResult.getNext());
-	p1.swapSecretAnimal(p2.getSecretAnimal());
+	Player * p1 = findPlayerByName(players, queryResult.getNext());
+	Player * p2 = findPlayerByName(players, queryResult.getNext());
+	p1->swapSecretAnimal(p2->getSecretAnimal());
 }
 
 // Hare Action.
@@ -115,10 +115,14 @@ QueryResult MooseAction::query() {
 }
 
 void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult) {
-	for (int i = 1; i < 5; i++) {
-		if (players[i]->getName() != "") {
+	try {
+		int numPlayer = stoi(queryResult.getNext());
+		for (int i = 1; i < numPlayer; i++) {
 			players[i]->swapSecretAnimal(players[0]->getSecretAnimal());
 		}
+	}
+	catch (...) {
+		throw string("InvalidNumberOfPlayerException");
 	}
 }
 
@@ -137,7 +141,7 @@ QueryResult WolfAction::query() {
 }
 
 void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult) {
-	Player p = findPlayerByName(players, queryResult.getNext());
+	Player * p = findPlayerByName(players, queryResult.getNext());
 	int x, y;
 	try {
 		y = stoi(queryResult.getNext());
@@ -150,5 +154,5 @@ void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	if (table.get(y, x) == nullptr) {
 		throw string("NoSuchCardException");
 	}
-	p.getHand() += table.pickAt(y, x);
+	p->getHand() += table.pickAt(y, x);
 }

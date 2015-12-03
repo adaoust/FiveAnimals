@@ -69,7 +69,7 @@ int main() {
 		} while (numPlayers < 5 && !ready);
 		for (int i = 0; i < numPlayers && playing; i++) {
 			Player * player = players[i];
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 15; j++) {
 				player->getHand() += deck.draw();
 			}
 		}
@@ -132,7 +132,19 @@ int main() {
 						}
 							
 						actionCard->perfom(table, players, qr);
-						player->getHand() -= cardPtr;
+						/*	If the action is a bear action, the hand will switch 
+							so we need to remove the card from the other player's hand*/
+						if (dynamic_cast<BearAction*>(actionCard)) {
+							//remove current player name in qr
+							qr.getNext();
+							//get player2 from qr
+							Player * temp = findPlayerByName(players, qr.getNext());
+							//remove bear card from player2's hand
+							temp->getHand() -= cardPtr;
+						}
+						else {
+							player->getHand() -= cardPtr;
+						}
 						
 					} else {
 						

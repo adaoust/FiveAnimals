@@ -13,6 +13,8 @@
 #include "Table.h"
 #include "Player.h"
 
+Player * findPlayerByName(Player ** player, string name);
+
 class ActionCard : public NoSplit {
 
 protected: 

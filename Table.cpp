@@ -39,6 +39,11 @@ void Table::addWithoutCheck(shared_ptr<AnimalCard> card, int row, int col) {
 }
 
 void Table::setRange() {
+    
+    // Reset the values so that if the table gets smaller it still works.
+    minRow = 103, minCol = 103;
+    maxRow = 0, maxCol = 0;
+    
 	for (int i = 0; i < 103; i++) {
 		for (int j = 0; j < 103; j++) {
 			if (table[i][j] != NULL) {

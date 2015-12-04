@@ -133,17 +133,18 @@ int main() {
 						}
 							
 						actionCard->perfom(table, players, qr);
+						
 						/*	If the action is a bear action, the hand will switch 
-							so we need to remove the card from the other player's hand*/
+							so we need to remove the card from the other player's hand */
 						if (dynamic_cast<BearAction*>(actionCard)) {
-							//remove current player name in qr
+							// Pop unnecessary things.
 							qr.getNext();
-							//get player2 from qr
-							Player * temp = findPlayerByName(players, qr.getNext(), numPlayers);
-							//remove bear card from player2's hand
-							temp->getHand() -= cardPtr;
-						}
-						else {
+							qr.getNext();
+							// Get other player from qr
+							Player * other = findPlayerByName(players, qr.getNext(), numPlayers);
+							// Remove bear action card from other player's hand
+							other->getHand() -= cardPtr;
+						} else {
 							player->getHand() -= cardPtr;
 						}
 						
@@ -211,7 +212,7 @@ int main() {
 				
 				cout << endl;
 				// Check for win and change playing to false if someone wins.
-				//playing = false;
+				// playing = false;
 			} while (!turnOver);
 		}
 	}

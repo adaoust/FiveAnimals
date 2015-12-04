@@ -69,7 +69,7 @@ int main() {
 		} while (numPlayers < 5 && !ready);
 		for (int i = 0; i < numPlayers && playing; i++) {
 			Player * player = players[i];
-			for (int j = 0; j < 3; j++) {
+			for (int j = 0; j < 20; j++) {
 				player->getHand() += deck.draw();
 			}
 		}
@@ -217,3 +217,31 @@ int main() {
 	}
 	return 0;
 }
+
+
+
+/*
+ 
+ <FiveAnimals>
+ 
+	<Player name="" secretAnimal="">
+		<Hand numCards="">
+			<Card type="" animals="" />
+		</Hand>
+	</Player>
+ 
+	<Deck>
+		<Card type="SplitTwo" animals="w,w,m,m" />
+		<Card type="SplitTwo" animals="w,w,m,m" />
+		<Card type="SplitTwo" animals="w,w,m,m" />
+	</Deck>
+ 
+	<Table>
+		<Card x="" y="" type="" animals="" />
+	</Table>
+ 
+ </FiveAnimals>
+ */
+
+
+

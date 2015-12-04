@@ -54,25 +54,20 @@ public: NoSplit(Animal a0) : AnimalCard(a0, a0, a0, a0) {}
 };
 
 class SplitTwo : public AnimalCard {
-private: 
-	SplitTwo(Animal a0, Animal a1, bool sideways) : AnimalCard(a0, (sideways) ? a0 : a1, (sideways) ? a1 : a0, a1) {}
-public: 
-	// Randomly selects sideways or not.
-	SplitTwo(Animal a0, Animal a1) : SplitTwo(a0, a1, (bool) (rand() % 2)) { srand(rand()); } 
+public: SplitTwo(Animal a0, Animal a1, bool sideways) : AnimalCard(a0, (sideways) ? a0 : a1, (sideways) ? a1 : a0, a1) {}
 };
 
 class SplitThree : public AnimalCard {
-private: 
+public:
 	// Places the animals according to the given direction (0..3).
 	// a0 is always the animal with two representations.
-	SplitThree(Animal a0, Animal a1, Animal a2, int dir) : AnimalCard(
+	SplitThree(Animal a0, Animal a1, Animal a2, int dir) :
+    AnimalCard(
 		(dir % 2 == 0) ? a0 : a1,
 		(dir == 0) ? a1 : ((dir == 3) ? a2 : a0),
 		(dir == 1) ? a2 : ((dir == 2) ? a1 : a0),
-		(dir % 2 == 0) ? a2 : a0) {}
-public: 
-	// Randomly selects where the two alike are placed.
-	SplitThree(Animal a0, Animal a1, Animal a2) : SplitThree(a0, a1, a2, (int) (rand() % 4)) { srand(rand()); }
+		(dir % 2 == 0) ? a2 : a0
+    ) {}
 };
 
 class SplitFour : public AnimalCard {

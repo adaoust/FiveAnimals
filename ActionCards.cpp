@@ -43,12 +43,14 @@ void BearAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	int numPlayer;
 	try {
 		numPlayer = stoi(queryResult.getNext());
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidNumberOfPlayerException");
 	}
 	Player * p1 = findPlayerByName(players, queryResult.getNext(), numPlayer);
 	Player * p2 = findPlayerByName(players, queryResult.getNext(), numPlayer);
+    if (p1 == p2) {
+        throw string("InvalidPlayerException");
+    }
 	p1->swapHand(p2->getHand());
 }
 
@@ -67,12 +69,14 @@ void DeerAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	int numPlayer;
 	try {
 		numPlayer = stoi(queryResult.getNext());
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidNumberOfPlayerException");
 	}
 	Player * p1 = findPlayerByName(players, queryResult.getNext(), numPlayer);
 	Player * p2 = findPlayerByName(players, queryResult.getNext(), numPlayer);
+    if (p1 == p2) {
+        throw string("InvalidPlayerException");
+    }
 	p1->swapSecretAnimal(p2->getSecretAnimal());
 }
 
@@ -103,8 +107,7 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 		x1 = stoi(queryResult.getNext());
 		y0 = stoi(queryResult.getNext());
 		x0 = stoi(queryResult.getNext());
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidCoordinatesException");
 	}
 	if (table.get(y0, x0) == nullptr) {
@@ -113,8 +116,7 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	shared_ptr<AnimalCard> card = table.pickAt(y0, x0);
 	try {
 		table.addAt(card, y1, x1);
-	}
-	catch (string e) {
+	} catch (string e) {
 		table.addWithoutCheck(card, y0, x0);
 		throw e;
 	}
@@ -134,8 +136,7 @@ void MooseAction::perfom(Table& table, Player** players, QueryResult queryResult
 		for (int i = 1; i < numPlayer; i++) {
 			players[i]->swapSecretAnimal(players[0]->getSecretAnimal());
 		}
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidNumberOfPlayerException");
 	}
 }
@@ -158,8 +159,7 @@ void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	int numPlayer;
 	try {
 		numPlayer = stoi(queryResult.getNext());
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidNumberOfPlayerException");
 	}
 	Player * p = findPlayerByName(players, queryResult.getNext(), numPlayer);
@@ -167,8 +167,7 @@ void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	try {
 		y = stoi(queryResult.getNext());
 		x = stoi(queryResult.getNext());
-	}
-	catch (...) {
+	} catch (...) {
 		throw string("InvalidCoordinatesException");
 	}
 

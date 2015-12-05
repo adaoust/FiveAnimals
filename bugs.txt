@@ -1,3 +1,2 @@
 -skip turn
 -remove start card? if yes, readd it on empty board
--impossible to win

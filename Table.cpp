@@ -36,14 +36,75 @@ to put a card on the table without performing any check
 void Table::addWithoutCheck(shared_ptr<AnimalCard> card, int row, int col) {
 	table[row][col] = card;
 	setRange();
+	updateAnimalCount(card, true);
+}
+
+void Table::updateAnimalCount(shared_ptr<AnimalCard> card, bool isAddAction) {
+	//get the four animals on the card
+	Animal a1 = card->getAnimal(0, 0);
+	Animal a2 = card->getAnimal(0, 1);
+	Animal a3 = card->getAnimal(1, 0);
+	Animal a4 = card->getAnimal(1, 1);
+	//the card is a joker, add or remove 1 of each animal
+	if (a1 == Animal::JOKER) {
+		if (isAddAction) {
+			numBear++;
+			numDeer++;
+			numHare++;
+			numMoose++;
+			numWolf++;
+		}
+		else {
+			numBear--;
+			numDeer--;
+			numHare--;
+			numMoose--;
+			numWolf--;
+		}
+	}
+	updateAnimalCount(a1, isAddAction);
+	if (a1 != a2) {
+		updateAnimalCount(a2, isAddAction);
+	}
+	if (a1 != a3) {
+		updateAnimalCount(a3, isAddAction);
+	}
+	if (a2 != a4 && a3 != a4) {
+		updateAnimalCount(a4, isAddAction);
+	}
+}
+
+void Table::updateAnimalCount(Animal animal, bool isAddAction) {
+	switch (animal) {
+	case Animal::BEAR:
+		if (isAddAction) { numBear++; }
+		else { numBear--; }
+		break;
+	case Animal::DEER:
+		if (isAddAction) { numDeer++; }
+		else { numDeer--; }
+		break;
+	case Animal::HARE:
+		if (isAddAction) { numHare++; }
+		else { numHare--; }
+		break;
+	case Animal::MOOSE:
+		if (isAddAction) { numMoose++; }
+		else { numMoose--; }
+		break;
+	case Animal::WOLF:
+		if (isAddAction) { numWolf++; }
+		else { numWolf--; }
+		break;
+	}
 }
 
 void Table::setRange() {
-    
-    // Reset the values so that if the table gets smaller it still works.
-    minRow = 103, minCol = 103;
-    maxRow = 0, maxCol = 0;
-    
+
+	// Reset the values so that if the table gets smaller it still works.
+	minRow = 103, minCol = 103;
+	maxRow = 0, maxCol = 0;
+
 	for (int i = 0; i < 103; i++) {
 		for (int j = 0; j < 103; j++) {
 			if (table[i][j] != NULL) {
@@ -121,6 +182,7 @@ int Table::addAt(shared_ptr<AnimalCard> card, int row, int col) {
 	}
 	table[row][col] = card;
 	setRange();
+	updateAnimalCount(card, true);
 	return countMatch;
 }
 
@@ -130,6 +192,7 @@ shared_ptr<AnimalCard> Table::pickAt(int row, int col) {
 		shared_ptr<AnimalCard> temp = table[row][col];
 		table[row][col] = NULL;
 		setRange();
+		updateAnimalCount(temp, false);
 		return temp;
 	}
 	else {
@@ -181,6 +244,29 @@ void Table::print() {
 	cout << endl;
 }
 
-bool Table::win(string & animal) {
-	return false; //impossible to win HEHEHE
+/*
+Since we are using an enum to represent animals on the card,
+we changed the function win(string & animal) to
+win(Animal & animal)
+*/
+bool Table::win(Animal & animal) {
+	switch (animal) {
+	case Animal::BEAR:
+		return numBear >= 12;
+		break;
+	case Animal::DEER:
+		return numDeer >= 12;
+		break;
+	case Animal::HARE:
+		return numHare >= 12;
+		break;
+	case Animal::MOOSE:
+		return numMoose >= 12;
+		break;
+	case Animal::WOLF:
+		return numWolf >= 12;
+		break;
+	default:
+		return false;
+	}
 }

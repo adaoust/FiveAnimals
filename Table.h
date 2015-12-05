@@ -26,6 +26,15 @@ private:
     int maxRow;
     int minCol;
     int maxCol;
+
+	//keep how many of each animals there is on the board
+	int numBear = 0;
+	int numDeer = 0;
+	int numHare = 0;
+	int numMoose = 0;
+	int numWolf = 0;
+	void updateAnimalCount(shared_ptr<AnimalCard> card, bool isAddAction);
+	void updateAnimalCount(Animal animal, bool isAddAction);
     
     void setRange();
     
@@ -41,7 +50,7 @@ public:
 	int addAt(shared_ptr<AnimalCard>, int row, int col);
 	shared_ptr<AnimalCard> pickAt(int row, int col);
 	shared_ptr<AnimalCard> get(int row, int col);
-	bool win(string& animal);
+	bool win(Animal& animal);
     void print();
 };
 

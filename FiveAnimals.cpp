@@ -69,7 +69,7 @@ int main() {
 		} while (numPlayers < 5 && !ready);
 		for (int i = 0; i < numPlayers && playing; i++) {
 			Player * player = players[i];
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 3; j++) {
 				player->getHand() += deck.draw();
 			}
 		}
@@ -212,8 +212,15 @@ int main() {
 				
 				cout << endl;
 				// Check for win and change playing to false if someone wins.
-				// playing = false;
+				for (int i = 0; i < numPlayers; i++) {
+					playing = !table.win(players[i]->getSecretAnimal());
+					if (!playing) {
+						cout << "Player " << players[i]->getName() << " won!" << endl;
+						break;
+					}
+				}
 			} while (!turnOver);
+		
 		}
 	}
 	return 0;

@@ -113,6 +113,9 @@ void HareAction::perfom(Table& table, Player** players, QueryResult queryResult)
 	if (table.get(y0, x0) == nullptr) {
 		throw string("NoSuchCardException");
 	}
+	if (table.get(y0, x0)->getAnimal(0, 0) == Animal::START) {
+		throw string("StartCardCanNotBeMovedException");
+	}
 	shared_ptr<AnimalCard> card = table.pickAt(y0, x0);
 	try {
 		table.addAt(card, y1, x1);
@@ -173,6 +176,10 @@ void WolfAction::perfom(Table& table, Player** players, QueryResult queryResult)
 
 	if (table.get(y, x) == nullptr) {
 		throw string("NoSuchCardException");
+	}
+
+	if (table.get(y, x)->getAnimal(0, 0) == Animal::START) {
+		throw string("StartCardCanNotBeMovedException");
 	}
 	p->getHand() += table.pickAt(y, x);
 }

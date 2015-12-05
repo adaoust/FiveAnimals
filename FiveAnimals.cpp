@@ -105,6 +105,7 @@ int main() {
 						if (cardNumStr == "SKIP") {
 							cardNumValid = true;
 							skipTurn = true;
+							turnOver = true;
 							cout << " >> Turn skipped!" << endl;
 						}
 						else {

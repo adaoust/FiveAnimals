@@ -9,6 +9,7 @@
 #include <string>
 #include <algorithm>
 
+#include "tinyxml.h"
 #include "ActionCards.h"
 #include "AnimalCardFactory.h"
 #include "Deck.h"
@@ -25,6 +26,7 @@ int main() {
 	int numPlayers;
 	bool playing;
 	
+	
 	{ // Setup
 		deck = AnimalCardFactory::getFactory()->getDeck();
 		table = Table();
@@ -33,44 +35,79 @@ int main() {
 		cout << "|---------------------------------------------|" << endl;
 		cout << "|  Welcome to the awesome Five Animals Game!  |" << endl;
 		cout << "|---------------------------------------------|" << endl << endl;
-		bool ready = false;
-		cout << "Enter the players' names (Leave empty to start game):" << endl;
 		
-		// Random Secret Animal
-		vector<Animal> secretAnimals = vector<Animal>();
-		secretAnimals.push_back(Animal::BEAR);
-		secretAnimals.push_back(Animal::DEER);
-		secretAnimals.push_back(Animal::HARE);
-		secretAnimals.push_back(Animal::MOOSE);
-		secretAnimals.push_back(Animal::WOLF);
-		shuffle(begin(secretAnimals), end(secretAnimals), default_random_engine((int) time(0)));
-		
+		cout << "Load a saved game of start a new one." << endl;
+		string answer;
 		do {
-			cout << " >> Name: ";
-			string playerName;
-			getline(cin, playerName);
-			if (playerName != "") {
-				bool nameValid = true;
-				for (int i = 0; i < numPlayers; i++) {
-					if (players[i]->getName() == playerName) nameValid = false;
-				}
-				if (nameValid) {
-					players[numPlayers] = new Player(playerName, secretAnimals.back());
-					secretAnimals.pop_back();
-					numPlayers++;
-				} else {
-					cout << " >> This name is already choosen!" << endl;
-				}
-			} else {
-				// Make sure all the players have different names.
-				if (numPlayers < 2) cout << " >> At least 2 players are required to play!" << endl;
-				else ready = true;
+			cout << " >> Enter 'load' or 'new': ";
+			getline(cin, answer);
+			if (answer != "load" && answer != "new") {
+				cout << " >> [UnrecognizedAnswerException]: It seems that an error ocured." << endl;
 			}
-		} while (numPlayers < 5 && !ready);
-		for (int i = 0; i < numPlayers && playing; i++) {
-			Player * player = players[i];
-			for (int j = 0; j < 20; j++) {
-				player->getHand() += deck.draw();
+		} while (!(answer == "load" || answer == "new"));
+		
+		
+		if (answer == "load") {
+			
+			cout << endl << "Enter the name of the file you wish to load." << endl;
+			
+			string fileName;
+			bool fileLoaded = false;
+			do {
+				cout << " >> File Path: ";
+				getline(cin, fileName);
+				try {
+					TiXmlDocument savedDocument = TiXmlDocument(fileName.c_str());
+					savedDocument.LoadFile();
+					TiXmlNode* node = savedDocument.FirstChild();
+					cout << node << endl;
+				} catch (...) {
+					cout << " >> [FileLoadingExeption}: It seems that an error ocured while trying to load you saved game. Try loading another file." << endl;
+				}
+			} while (!fileLoaded);
+			
+			
+			
+		} else {
+			bool ready = false;
+			cout << endl << "Enter the players' names (Leave empty to start game):" << endl;
+			
+			// Random Secret Animal
+			vector<Animal> secretAnimals = vector<Animal>();
+			secretAnimals.push_back(Animal::BEAR);
+			secretAnimals.push_back(Animal::DEER);
+			secretAnimals.push_back(Animal::HARE);
+			secretAnimals.push_back(Animal::MOOSE);
+			secretAnimals.push_back(Animal::WOLF);
+			shuffle(begin(secretAnimals), end(secretAnimals), default_random_engine((int) time(0)));
+			
+			do {
+				cout << " >> Name: ";
+				string playerName;
+				getline(cin, playerName);
+				if (playerName != "") {
+					bool nameValid = true;
+					for (int i = 0; i < numPlayers; i++) {
+						if (players[i]->getName() == playerName) nameValid = false;
+					}
+					if (nameValid) {
+						players[numPlayers] = new Player(playerName, secretAnimals.back());
+						secretAnimals.pop_back();
+						numPlayers++;
+					} else {
+						cout << " >> This name is already choosen!" << endl;
+					}
+				} else {
+					// Make sure all the players have different names.
+					if (numPlayers < 2) cout << " >> At least 2 players are required to play!" << endl;
+					else ready = true;
+				}
+			} while (numPlayers < 5 && !ready);
+			for (int i = 0; i < numPlayers && playing; i++) {
+				Player * player = players[i];
+				for (int j = 0; j < 20; j++) {
+					player->getHand() += deck.draw();
+				}
 			}
 		}
 	}
@@ -218,31 +255,5 @@ int main() {
 	}
 	return 0;
 }
-
-
-
-/*
- 
- <FiveAnimals>
- 
-	<Player name="" secretAnimal="">
-		<Hand numCards="">
-			<Card type="" animals="" />
-		</Hand>
-	</Player>
- 
-	<Deck>
-		<Card type="SplitTwo" animals="w,w,m,m" />
-		<Card type="SplitTwo" animals="w,w,m,m" />
-		<Card type="SplitTwo" animals="w,w,m,m" />
-	</Deck>
- 
-	<Table>
-		<Card x="" y="" type="" animals="" />
-	</Table>
- 
- </FiveAnimals>
- */
-
 
 

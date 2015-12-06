@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone=no>
+<FiveAnimals>
+    
+    <Player name="Alex" secretAnimal="Hare">
+        <Hand>
+            <Card type="BearAction" animals="B,B,B,B" />
+            <Card type="SplitTwo" animals="m,b,b,m" />
+            <Card type="SplitFour" animals="b,d,m,w" />
+        </Hand>
+    </Player>
+    
+    <Player name="Max" secretAnimal="Bear">
+        <Hand>
+            <Card type="NoSplit" animals="b,b,b,b" />
+            <Card type="HareAction" animals="H,H,H,H" />
+            <Card type="MooseAction" animals="M,M,M,M" />
+            <Card type="SplitThree" animals="m,m,w,h" />
+        </Hand>
+    </Player>
+    
+    <Deck>
+        <Card type="SplitTwo" animals="w,w,m,m" />
+        <Card type="SplitFour" animals="w,d,m,b" />
+        <Card type="NoSplit" animals="d,d,d,d" />
+        <Card type="Joker" animals="j,j,j,j" />
+        <Card type="WolfAction" animals="W,W,W,W" />
+    </Deck>
+    
+    <Table>
+        <Card x="52" y="52" type="StartCard" animals="c,c,c,c" />
+        <Card x="51" y="52" type="NoSplit" animals="w,w,w,w" />
+        <Card x="52" y="51" type="NoSplit" animals="m,m,m,m" />
+    </Table>
+    
+</FiveAnimals>

@@ -19,6 +19,11 @@ enum class Animal { BEAR, DEER, HARE, MOOSE, WOLF, JOKER, START };
 enum class Orientation { UP, DOWN };
 enum class EvenOdd { EVEN, ODD };
 
+string getAnimalString(const Animal animal);
+char getAnimalChar(const Animal animal);
+Animal getAnimal(string animal);
+Animal getAnimal(char animal);
+
 class AnimalCard {
 
 protected:
@@ -36,8 +41,6 @@ protected:
 
 public:
     
-    static string getAnimalString(const Animal animal);
-	static char getAnimalChar(const Animal animal);
 	virtual void setOrientation(Orientation o) { _orientation = o; };
 	//virtual void setRow(EvenOdd eo) { _evenOdd = eo; }; Pas besoin, il y a le parametre directement dans printRow
 	virtual void printRow(EvenOdd);
@@ -63,10 +66,10 @@ public:
 	// a0 is always the animal with two representations.
 	SplitThree(Animal a0, Animal a1, Animal a2, int dir) :
     AnimalCard(
-		(dir % 2 == 0) ? a0 : a1,
-		(dir == 0) ? a1 : ((dir == 3) ? a2 : a0),
-		(dir == 1) ? a2 : ((dir == 2) ? a1 : a0),
-		(dir % 2 == 0) ? a2 : a0
+        (dir == 0 || dir == 3) ? a0 : a1,
+        (dir == 0 || dir == 1) ? a0 : ((dir == 2) ? a2 : a1),
+        (dir == 2 || dir == 3) ? a0 : ((dir == 0) ? a1 : a2),
+        (dir == 1 || dir == 2) ? a0 : a2
     ) {}
 };
 

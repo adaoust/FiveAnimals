@@ -95,7 +95,9 @@ void Table::updateAnimalCount(Animal animal, bool isAddAction) {
 	case Animal::WOLF:
 		if (isAddAction) { numWolf++; }
 		else { numWolf--; }
-		break;
+        break;
+    default :
+        break;
 	}
 }
 

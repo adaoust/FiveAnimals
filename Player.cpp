@@ -20,7 +20,7 @@ Animal & Player::getSecretAnimal() {
 
 void Player::print() {
 	cout << "Player: " << playerName << endl;
-	cout << "Secret Animal: " << AnimalCard::getAnimalString(secretAnimal) << endl;
+	cout << "Secret Animal: " << getAnimalString(secretAnimal) << endl;
 	cout << "Hand: " << endl << endl;
 	hand.print();
 }

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-string AnimalCard::getAnimalString(const Animal animal) {
+string getAnimalString(const Animal animal) {
     switch (animal) {
         case Animal::BEAR: return "Bear";
         case Animal::DEER: return "Deer";
@@ -24,17 +24,39 @@ string AnimalCard::getAnimalString(const Animal animal) {
     }
 }
 
-char AnimalCard::getAnimalChar(const Animal animal) {
-	switch (animal) {
-	case Animal::BEAR: return 'b';
-	case Animal::DEER: return 'd';
-	case Animal::HARE: return 'h';
-	case Animal::MOOSE: return 'm';
-	case Animal::WOLF: return 'w';
-	case Animal::JOKER: return 'j';
-	case Animal::START: return 'c';
-	default: return ' ';
-	}
+char getAnimalChar(const Animal animal) {
+    switch (animal) {
+        case Animal::BEAR: return 'b';
+        case Animal::DEER: return 'd';
+        case Animal::HARE: return 'h';
+        case Animal::MOOSE: return 'm';
+        case Animal::WOLF: return 'w';
+        case Animal::JOKER: return 'j';
+        case Animal::START: return 'c';
+        default: return ' ';
+    }
+}
+
+Animal getAnimal(string animal) {
+    if (animal == "Bear" || animal == "b") return Animal::BEAR;
+    else if (animal == "Deer" || animal == "d") return Animal::DEER;
+    else if (animal == "Hare" || animal == "h") return Animal::HARE;
+    else if (animal == "Moose" || animal == "m")  return Animal::MOOSE;
+    else if (animal == "Wolf" || animal == "w")  return Animal::WOLF;
+    else if (animal == "Joker" || animal == "j")  return Animal::JOKER;
+    else if (animal == "Start" || animal == "c")  return Animal::START;
+    else return (Animal) NULL;
+}
+
+Animal getAnimal(char animal) {
+    if (animal == 'b') return Animal::BEAR;
+    else if (animal == 'd') return Animal::DEER;
+    else if (animal == 'h') return Animal::HARE;
+    else if (animal == 'm')  return Animal::MOOSE;
+    else if (animal == 'w')  return Animal::WOLF;
+    else if (animal == 'j')  return Animal::JOKER;
+    else if (animal == 'c')  return Animal::START;
+    else return (Animal) NULL;
 }
 
 void AnimalCard::printRow(EvenOdd evenOdd) {

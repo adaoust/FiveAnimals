@@ -161,44 +161,42 @@ int main() {
 						string animalsStr = cardElem->Attribute("animals");
 						
 						if (type == "NoSplit") {
-							table.addWithoutCheck(make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0]))), x, y);
+							table.addWithoutCheck(make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0]))), y, x);
 						} else if (type == "SplitTwo") {
 							if (animalsStr[0] == animalsStr[1]) {
-								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true)), x, y);
+								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true)), y, x);
 							} else  {
-								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false)), x, y);
+								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false)), y, x);
 							}
 						} else if (type == "SplitThree") {
 							if (animalsStr[0] == animalsStr[1]) { // dir 0
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0)), x, y);
+								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0)), y, x);
 							} else if (animalsStr[1] == animalsStr[2]) { // dir 1
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1)), x, y);
+								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1)), y, x);
 							} else if (animalsStr[2] == animalsStr[3]) { // dir 2
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2)), x, y);
+								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2)), y, x);
 							} else if (animalsStr[3] == animalsStr[1]) { // dir 3
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3)), x, y);
+								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3)), y, x);
 							}
 						} else if (type == "SplitFour") {
-							table.addWithoutCheck(make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]))), x, y);
+							table.addWithoutCheck(make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]))), y, x);
 						} else if (type == "StartCard") {
-							table.addWithoutCheck(make_shared<StartCard>(StartCard()), x, y);
+							table.addWithoutCheck(make_shared<StartCard>(StartCard()), y, x);
 						} else if (type == "Joker") {
-							table.addWithoutCheck(make_shared<Joker>(Joker()), x, y);
+							table.addWithoutCheck(make_shared<Joker>(Joker()), y, x);
 						} else if (type == "BearAction") {
-							table.addWithoutCheck(make_shared<BearAction>(BearAction()), x, y);
+							table.addWithoutCheck(make_shared<BearAction>(BearAction()), y, x);
 						} else if (type == "DeerAction") {
-							table.addWithoutCheck(make_shared<DeerAction>(DeerAction()), x, y);
+							table.addWithoutCheck(make_shared<DeerAction>(DeerAction()), y, x);
 						} else if (type == "HareAction") {
-							table.addWithoutCheck(make_shared<HareAction>(HareAction()), x, y);
+							table.addWithoutCheck(make_shared<HareAction>(HareAction()), y, x);
 						} else if (type == "MooseAction") {
-							table.addWithoutCheck(make_shared<MooseAction>(MooseAction()), x, y);
+							table.addWithoutCheck(make_shared<MooseAction>(MooseAction()), y, x);
 						} else if (type == "WolfAction") {
-							table.addWithoutCheck(make_shared<WolfAction>(WolfAction()), x, y);
+							table.addWithoutCheck(make_shared<WolfAction>(WolfAction()), y, x);
 						}
 						
 					}
-					
-					///Users/AlexDAoust/Documents/programming/c++/Project CSI2772/FiveAnimalsXcode/FiveAnimalsXcode/FiveAnimals/Save-01.xml
 					
 				} else {
 					cout << " >> [FileLoadingExeption}: It seems that an error ocured while trying to load you saved game. Try loading another file." << endl;
@@ -272,10 +270,10 @@ int main() {
 					bool cardNumValid = true;
 					int cardNum = 0;
 					do {
-						cout << " >> Choose a card, or type SKIP to skip your turn: ";
+						cout << " >> Choose a card, or type 'skip' to skip your turn: ";
 						string cardNumStr;
 						getline(cin, cardNumStr);
-						if (cardNumStr == "SKIP") {
+						if (cardNumStr == "skip") {
 							cardNumValid = true;
 							skipTurn = true;
 							turnOver = true;

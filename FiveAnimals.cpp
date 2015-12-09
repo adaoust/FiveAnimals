@@ -26,6 +26,7 @@ int main() {
 	Table table;
 	Player * players[5];
 	int numPlayers;
+	int startPlayer = 0;
 	bool playing;
     
 	{ // Setup
@@ -59,6 +60,8 @@ int main() {
 				if (fileLoaded) {
 					
 					TiXmlElement* fiveAnimalsElem = savedDocument.FirstChild()->ToElement();
+					
+					startPlayer = stoi(fiveAnimalsElem->Attribute("startPlayer"));
 					
 					for(TiXmlElement* player = fiveAnimalsElem->FirstChild("Player")->ToElement(); player; player = player->NextSiblingElement("Player")) {
 						TiXmlElement* playerElem = player->ToElement();
@@ -254,7 +257,8 @@ int main() {
 
 	while (playing) {
 		// Check for Pause.
-		for (int i = 0; i < numPlayers && playing; i++) {
+		for (int i = startPlayer; i < numPlayers && playing; i++) {
+			startPlayer = 0;
 			Player * player = players[i];
 			cout << player->getName() << "'s Turn!" << endl;
 			player->getHand() += deck.draw();
@@ -270,16 +274,220 @@ int main() {
 					bool cardNumValid = true;
 					int cardNum = 0;
 					do {
-						cout << " >> Choose a card, or type 'skip' to skip your turn: ";
+						cout << " >> Choose a card, 'skip' or 'save' to end your turn: ";
 						string cardNumStr;
 						getline(cin, cardNumStr);
-						if (cardNumStr == "skip") {
-							cardNumValid = true;
-							skipTurn = true;
-							turnOver = true;
-							cout << " >> Turn skipped!" << endl;
-						}
-						else {
+						if (cardNumStr == "skip" || cardNumStr == "save") {
+							
+							if (cardNumStr == "skip") {
+								cardNumValid = true;
+								skipTurn = true;
+								turnOver = true;
+								cout << " >> Turn skipped!" << endl;
+							} else {
+								
+								bool saved = false;
+								do {
+									
+									string dir, fileName;
+									
+									cout << " >> Enter the location of where you want to save your file: ";
+									getline(cin, dir);
+									cout << " >> Enter the name of your save file: ";
+									getline(cin, fileName);
+									
+									string fullPath = dir + ((dir[dir.length() - 1] == '/') ? "" : "/") + fileName;
+									
+									TiXmlDocument saveDocument = TiXmlDocument(fullPath.c_str());
+									TiXmlElement fiveAnimals = TiXmlElement("FiveAnimals");
+									fiveAnimals.SetAttribute("startPlayer", i);
+									
+									
+									for (int p = 0; p < numPlayers; p++) {
+										TiXmlElement playerNode = TiXmlElement("Player");
+										
+										playerNode.SetAttribute("name", players[p]->getName().c_str());
+										playerNode.SetAttribute("secretAnimal", getAnimalString(players[p]->getSecretAnimal()).c_str());
+										
+										TiXmlElement hand = TiXmlElement("Hand");
+										for (int c = 0; c < players[p]->getHand().numCards(); c++) {
+											TiXmlElement card = TiXmlElement("Card");
+											AnimalCard* aCard = players[p]->getHand()[c].get();
+											string type = "";
+											
+											if (dynamic_cast<Joker*>(aCard)) {
+												type = "Joker";
+											} else if (dynamic_cast<BearAction*>(aCard)) {
+												type = "BearAction";
+											} else if (dynamic_cast<DeerAction*>(aCard)) {
+												type = "DeerAction";
+											} else if (dynamic_cast<HareAction*>(aCard)) {
+												type = "HareAction";
+											} else if (dynamic_cast<MooseAction*>(aCard)) {
+												type = "MooseAction";
+											} else if (dynamic_cast<WolfAction*>(aCard)) {
+												type = "WolfAction";
+											} else if (dynamic_cast<StartCard*>(aCard)) {
+												type = "StartCard";
+											} else if (dynamic_cast<NoSplit*>(aCard)) {
+												type = "NoSplit";
+											} else if (dynamic_cast<SplitTwo*>(aCard)) {
+												type = "SplitTwo";
+											} else if (dynamic_cast<SplitThree*>(aCard)) {
+												type = "SplitThree";
+											} else if (dynamic_cast<SplitFour*>(aCard)) {
+												type = "SplitFour";
+											}
+											
+											string animals = "x,x,x,x";
+											if (dynamic_cast<ActionCard*>(aCard)) {
+												animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
+												animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
+												animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
+												animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
+											} else {
+												animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
+												animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
+												animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
+												animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
+											}
+											
+											card.SetAttribute("type", type.c_str());
+											card.SetAttribute("animals", animals.c_str());
+											
+											hand.InsertEndChild(card);
+										}
+										
+										playerNode.InsertEndChild(hand);
+										fiveAnimals.InsertEndChild(playerNode);
+									}
+									
+									TiXmlElement deckElem = TiXmlElement("Deck");
+									for (int c = 0; c < deck.size(); c++) {
+										TiXmlElement card = TiXmlElement("Card");
+										AnimalCard* aCard = deck.draw().get();
+										string type = "";
+										
+										if (dynamic_cast<Joker*>(aCard)) {
+											type = "Joker";
+										} else if (dynamic_cast<BearAction*>(aCard)) {
+											type = "BearAction";
+										} else if (dynamic_cast<DeerAction*>(aCard)) {
+											type = "DeerAction";
+										} else if (dynamic_cast<HareAction*>(aCard)) {
+											type = "HareAction";
+										} else if (dynamic_cast<MooseAction*>(aCard)) {
+											type = "MooseAction";
+										} else if (dynamic_cast<WolfAction*>(aCard)) {
+											type = "WolfAction";
+										} else if (dynamic_cast<StartCard*>(aCard)) {
+											type = "StartCard";
+										} else if (dynamic_cast<NoSplit*>(aCard)) {
+											type = "NoSplit";
+										} else if (dynamic_cast<SplitTwo*>(aCard)) {
+											type = "SplitTwo";
+										} else if (dynamic_cast<SplitThree*>(aCard)) {
+											type = "SplitThree";
+										} else if (dynamic_cast<SplitFour*>(aCard)) {
+											type = "SplitFour";
+										}
+										
+										string animals = "x,x,x,x";
+										if (dynamic_cast<ActionCard*>(aCard)) {
+											animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
+											animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
+											animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
+											animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
+										} else {
+											animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
+											animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
+											animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
+											animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
+										}
+										
+										card.SetAttribute("type", type.c_str());
+										card.SetAttribute("animals", animals.c_str());
+										
+										deckElem.InsertEndChild(card);
+									}
+									fiveAnimals.InsertEndChild(deckElem);
+									
+									TiXmlElement tableElem = TiXmlElement("Table");
+									for (int x = 0; x < 103; x++) {
+										for (int y = 0; y < 103; y++) {
+											
+											AnimalCard* aCard = table.get(y, x).get();
+											
+											if (aCard != nullptr) {
+												
+												TiXmlElement card = TiXmlElement("Card");
+												string type = "";
+												
+												if (dynamic_cast<Joker*>(aCard)) {
+													type = "Joker";
+												} else if (dynamic_cast<BearAction*>(aCard)) {
+													type = "BearAction";
+												} else if (dynamic_cast<DeerAction*>(aCard)) {
+													type = "DeerAction";
+												} else if (dynamic_cast<HareAction*>(aCard)) {
+													type = "HareAction";
+												} else if (dynamic_cast<MooseAction*>(aCard)) {
+													type = "MooseAction";
+												} else if (dynamic_cast<WolfAction*>(aCard)) {
+													type = "WolfAction";
+												} else if (dynamic_cast<StartCard*>(aCard)) {
+													type = "StartCard";
+												} else if (dynamic_cast<NoSplit*>(aCard)) {
+													type = "NoSplit";
+												} else if (dynamic_cast<SplitTwo*>(aCard)) {
+													type = "SplitTwo";
+												} else if (dynamic_cast<SplitThree*>(aCard)) {
+													type = "SplitThree";
+												} else if (dynamic_cast<SplitFour*>(aCard)) {
+													type = "SplitFour";
+												}
+												
+												string animals = "x,x,x,x";
+												if (dynamic_cast<ActionCard*>(aCard)) {
+													animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
+													animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
+													animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
+													animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
+												} else {
+													animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
+													animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
+													animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
+													animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
+												}
+												
+												card.SetAttribute("x", x);
+												card.SetAttribute("y", y);
+												card.SetAttribute("type", type.c_str());
+												card.SetAttribute("animals", animals.c_str());
+												
+												tableElem.InsertEndChild(card);
+											}
+										}
+									}
+									fiveAnimals.InsertEndChild(tableElem);
+									
+									
+									saveDocument.InsertEndChild(fiveAnimals);
+									saveDocument.SaveFile();
+									
+									// Exit out of the game.
+									turnOver = true;
+									skipTurn = true;
+									cardNumValid = true;
+									saved = true;
+									playing = false;
+									
+									cout << " >> Game Saved!";
+									
+								} while (!saved);
+								
+							}
+						} else {
 							try {
 								cardNum = stoi(cardNumStr);
 								cardNumValid = true;
@@ -393,24 +601,30 @@ int main() {
 						cout << endl << player->getName() << "'s Turn is over.." << endl;
 
 					}
-				}
-				catch (string e) {
+				} catch (string e) {
 					cout << " >> [" << e << "]: It seems that an error ocured, play your turn again!";
 					turnOver = false;
 				}
 
 				cout << endl;
 				// Check for win and change playing to false if someone wins.
-				for (int i = 0; i < numPlayers; i++) {
-					playing = !table.win(players[i]->getSecretAnimal());
-					if (!playing) {
-						cout << "Player " << players[i]->getName() << " won!" << endl;
-						break;
+				if (playing) {
+					for (int i = 0; i < numPlayers; i++) {
+						playing = !table.win(players[i]->getSecretAnimal());
+						if (!playing) {
+							cout << "Player " << players[i]->getName() << " won!" << endl;
+							break;
+						}
 					}
 				}
 			} while (!turnOver);
 
 		}
 	}
+	
+	for (int i = 0; i < numPlayers; i++) {
+		delete players[i];
+	}
+	
 	return 0;
 }

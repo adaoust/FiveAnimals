@@ -13,7 +13,7 @@
 AnimalCardFactory::AnimalCardFactory() {
 
 	_deck = Deck<AnimalCard>();
-	_deck.push_back(make_shared<AnimalCard>(Joker()));
+	_deck.push_back(make_shared<Joker>(Joker()));
 
 	// Create 15 ActionCards.
     for (int i = 0; i < 3; i++) {

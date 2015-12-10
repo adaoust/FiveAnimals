@@ -19,7 +19,120 @@
 #include "Table.h"
 
 using namespace std;
+shared_ptr<AnimalCard> getCardFromXml(TiXmlElement* cardElem) {
+	string type = cardElem->Attribute("type");
+	string animalsStr = cardElem->Attribute("animals");
 
+	if (type == "NoSplit") {
+		return make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0])));
+	}
+	else if (type == "SplitTwo") {
+		if (animalsStr[0] == animalsStr[1]) {
+			return make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true));
+		}
+		else {
+			return make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false));
+		}
+	}
+	else if (type == "SplitThree") {
+		if (animalsStr[0] == animalsStr[1]) { // dir 0
+			return make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0));
+		}
+		else if (animalsStr[1] == animalsStr[2]) { // dir 1
+			return make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1));
+		}
+		else if (animalsStr[2] == animalsStr[3]) { // dir 2
+			return make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2));
+		}
+		else if (animalsStr[3] == animalsStr[1]) { // dir 3
+			return make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3));
+		}
+	}
+	else if (type == "SplitFour") {
+		return make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6])));
+	}
+	else if (type == "StartCard") {
+		return make_shared<StartCard>(StartCard());
+	}
+	else if (type == "Joker") {
+		return make_shared<Joker>(Joker());
+	}
+	else if (type == "BearAction") {
+		return make_shared<BearAction>(BearAction());
+	}
+	else if (type == "DeerAction") {
+		return make_shared<DeerAction>(DeerAction());
+	}
+	else if (type == "HareAction") {
+		return make_shared<HareAction>(HareAction());
+	}
+	else if (type == "MooseAction") {
+		return make_shared<MooseAction>(MooseAction());
+	}
+	else if (type == "WolfAction") {
+		return make_shared<WolfAction>(WolfAction());
+	}
+}
+
+TiXmlElement  getXMLCard(AnimalCard* aCard) {
+
+	if (aCard != nullptr) {
+
+		TiXmlElement card = TiXmlElement("Card");
+		string type = "";
+
+		if (dynamic_cast<Joker*>(aCard)) {
+			type = "Joker";
+		}
+		else if (dynamic_cast<BearAction*>(aCard)) {
+			type = "BearAction";
+		}
+		else if (dynamic_cast<DeerAction*>(aCard)) {
+			type = "DeerAction";
+		}
+		else if (dynamic_cast<HareAction*>(aCard)) {
+			type = "HareAction";
+		}
+		else if (dynamic_cast<MooseAction*>(aCard)) {
+			type = "MooseAction";
+		}
+		else if (dynamic_cast<WolfAction*>(aCard)) {
+			type = "WolfAction";
+		}
+		else if (dynamic_cast<StartCard*>(aCard) || aCard->getAnimal(0,0) == Animal::START) {
+			type = "StartCard";
+		}
+		else if (dynamic_cast<NoSplit*>(aCard)) {
+			type = "NoSplit";
+		}
+		else if (dynamic_cast<SplitTwo*>(aCard)) {
+			type = "SplitTwo";
+		}
+		else if (dynamic_cast<SplitThree*>(aCard)) {
+			type = "SplitThree";
+		}
+		else if (dynamic_cast<SplitFour*>(aCard)) {
+			type = "SplitFour";
+		}
+
+		string animals = "x,x,x,x";
+		if (dynamic_cast<ActionCard*>(aCard)) {
+			animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
+			animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
+			animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
+			animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
+		}
+		else {
+			animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
+			animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
+			animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
+			animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
+		}
+		card.SetAttribute("type", type.c_str());
+		card.SetAttribute("animals", animals.c_str());
+		return card;
+	}
+}
 int main() {
 
 	Deck<AnimalCard> deck;
@@ -28,7 +141,7 @@ int main() {
 	int numPlayers;
 	int startPlayer = 0;
 	bool playing;
-    
+
 	{ // Setup
 		table = Table();
 		playing = true;
@@ -36,7 +149,7 @@ int main() {
 		cout << "|---------------------------------------------|" << endl;
 		cout << "|  Welcome to the awesome Five Animals Game!  |" << endl;
 		cout << "|---------------------------------------------|" << endl << endl;
-		
+
 		cout << "Load a saved game of start a new one." << endl;
 		string answer;
 		do {
@@ -46,7 +159,7 @@ int main() {
 				cout << " >> [UnrecognizedAnswerException]: It seems that an error ocured." << endl;
 			}
 		} while (!(answer == "load" || answer == "new"));
-		
+
 		if (answer == "load") {
 			deck = Deck<AnimalCard>(); // Creates an Empty Deck.
 			cout << endl << "Enter the name of the file you wish to load." << endl;
@@ -58,159 +171,50 @@ int main() {
 				TiXmlDocument savedDocument = TiXmlDocument(fileName.c_str());
 				fileLoaded = savedDocument.LoadFile();
 				if (fileLoaded) {
-					
+
 					TiXmlElement* fiveAnimalsElem = savedDocument.FirstChild()->ToElement();
-					
+
 					startPlayer = stoi(fiveAnimalsElem->Attribute("startPlayer"));
-					
-					for(TiXmlElement* player = fiveAnimalsElem->FirstChild("Player")->ToElement(); player; player = player->NextSiblingElement("Player")) {
+
+					for (TiXmlElement* player = fiveAnimalsElem->FirstChild("Player")->ToElement(); player; player = player->NextSiblingElement("Player")) {
 						TiXmlElement* playerElem = player->ToElement();
 						string playerName = playerElem->Attribute("name");
 						string secretAnimal = playerElem->Attribute("secretAnimal");
 						players[numPlayers] = new Player(playerName, getAnimal(secretAnimal));
-						
+
 						TiXmlElement* hand = playerElem->FirstChild("Hand")->ToElement();
-						for(TiXmlElement* card = hand->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
-							
-							TiXmlElement* cardElem = card->ToElement();
-							string type = cardElem->Attribute("type");
-							string animalsStr = cardElem->Attribute("animals");
-							
-							if (type == "NoSplit") {
-								players[numPlayers]->getHand() += make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0])));
-							} else if (type == "SplitTwo") {
-								if (animalsStr[0] == animalsStr[1]) players[numPlayers]->getHand() += make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true));
-								else players[numPlayers]->getHand() += make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false));
-							} else if (type == "SplitThree") {
-								if (animalsStr[0] == animalsStr[1]) { // dir 0
-									players[numPlayers]->getHand() += make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0));
-								} else if (animalsStr[1] == animalsStr[2]) { // dir 1
-									players[numPlayers]->getHand() += make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1));
-								} else if (animalsStr[2] == animalsStr[3]) { // dir 2
-									players[numPlayers]->getHand() += make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2));
-								} else if (animalsStr[3] == animalsStr[1]) { // dir 3
-									players[numPlayers]->getHand() += make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3));
-								}
-							} else if (type == "SplitFour") {
-								players[numPlayers]->getHand() += make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6])));
-							} else if (type == "StartCard") {
-								players[numPlayers]->getHand() += make_shared<StartCard>(StartCard());
-							} else if (type == "Joker") {
-								players[numPlayers]->getHand() += make_shared<Joker>(Joker());
-							} else if (type == "BearAction") {
-								players[numPlayers]->getHand() += make_shared<BearAction>(BearAction());
-							} else if (type == "DeerAction") {
-								players[numPlayers]->getHand() += make_shared<DeerAction>(DeerAction());
-							} else if (type == "HareAction") {
-								players[numPlayers]->getHand() += make_shared<HareAction>(HareAction());
-							} else if (type == "MooseAction") {
-								players[numPlayers]->getHand() += make_shared<MooseAction>(MooseAction());
-							} else if (type == "WolfAction") {
-								players[numPlayers]->getHand() += make_shared<WolfAction>(WolfAction());
-							}
-							
+						for (TiXmlElement* card = hand->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
+							players[numPlayers]->getHand() += getCardFromXml(card->ToElement());
 						}
-						
+
 						numPlayers++;
 					}
-					
+
 					TiXmlElement* deckElem = fiveAnimalsElem->FirstChild("Deck")->ToElement();
-					for(TiXmlElement* card = deckElem->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
-						TiXmlElement* cardElem = card->ToElement();
-						string type = cardElem->Attribute("type");
-						string animalsStr = cardElem->Attribute("animals");
-						
-						if (type == "NoSplit") {
-							deck.push_back(make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0]))));
-						} else if (type == "SplitTwo") {
-							if (animalsStr[0] == animalsStr[1]) deck.push_back(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true)));
-							else deck.push_back(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false)));
-						} else if (type == "SplitThree") {
-							if (animalsStr[0] == animalsStr[1]) { // dir 0
-								deck.push_back(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0)));
-							} else if (animalsStr[1] == animalsStr[2]) { // dir 1
-								deck.push_back(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1)));
-							} else if (animalsStr[2] == animalsStr[3]) { // dir 2
-								deck.push_back(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2)));
-							} else if (animalsStr[3] == animalsStr[1]) { // dir 3
-								deck.push_back(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3)));
-							}
-						} else if (type == "SplitFour") {
-							deck.push_back(make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]))));
-						} else if (type == "StartCard") {
-							deck.push_back(make_shared<StartCard>(StartCard()));
-						} else if (type == "Joker") {
-							deck.push_back(make_shared<Joker>(Joker()));
-						} else if (type == "BearAction") {
-							deck.push_back(make_shared<BearAction>(BearAction()));
-						} else if (type == "DeerAction") {
-							deck.push_back(make_shared<DeerAction>(DeerAction()));
-						} else if (type == "HareAction") {
-							deck.push_back(make_shared<HareAction>(HareAction()));
-						} else if (type == "MooseAction") {
-							deck.push_back(make_shared<MooseAction>(MooseAction()));
-						} else if (type == "WolfAction") {
-							deck.push_back(make_shared<WolfAction>(WolfAction()));
-						}
-							
+					for (TiXmlElement* card = deckElem->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
+						deck.push_back(getCardFromXml(card->ToElement()));
 					}
-					
+
 					TiXmlElement* tableElem = fiveAnimalsElem->FirstChild("Table")->ToElement();
-					for(TiXmlElement* card = tableElem->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
+					for (TiXmlElement* card = tableElem->FirstChild("Card")->ToElement(); card; card = card->NextSiblingElement("Card")) {
+
 						TiXmlElement* cardElem = card->ToElement();
 						int x = stoi(cardElem->Attribute("x"));
 						int y = stoi(cardElem->Attribute("y"));
-						string type = cardElem->Attribute("type");
-						string animalsStr = cardElem->Attribute("animals");
-						
-						if (type == "NoSplit") {
-							table.addWithoutCheck(make_shared<NoSplit>(NoSplit(getAnimal(animalsStr[0]))), y, x);
-						} else if (type == "SplitTwo") {
-							if (animalsStr[0] == animalsStr[1]) {
-								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), true)), y, x);
-							} else  {
-								table.addWithoutCheck(make_shared<SplitTwo>(SplitTwo(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), false)), y, x);
-							}
-						} else if (type == "SplitThree") {
-							if (animalsStr[0] == animalsStr[1]) { // dir 0
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]), 0)), y, x);
-							} else if (animalsStr[1] == animalsStr[2]) { // dir 1
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[2]), getAnimal(animalsStr[0]), getAnimal(animalsStr[4]), 1)), y, x);
-							} else if (animalsStr[2] == animalsStr[3]) { // dir 2
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[4]), getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), 2)), y, x);
-							} else if (animalsStr[3] == animalsStr[1]) { // dir 3
-								table.addWithoutCheck(make_shared<SplitThree>(SplitThree(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[6]), 3)), y, x);
-							}
-						} else if (type == "SplitFour") {
-							table.addWithoutCheck(make_shared<SplitFour>(SplitFour(getAnimal(animalsStr[0]), getAnimal(animalsStr[2]), getAnimal(animalsStr[4]), getAnimal(animalsStr[6]))), y, x);
-						} else if (type == "StartCard") {
-							table.addWithoutCheck(make_shared<StartCard>(StartCard()), y, x);
-						} else if (type == "Joker") {
-							table.addWithoutCheck(make_shared<Joker>(Joker()), y, x);
-						} else if (type == "BearAction") {
-							table.addWithoutCheck(make_shared<BearAction>(BearAction()), y, x);
-						} else if (type == "DeerAction") {
-							table.addWithoutCheck(make_shared<DeerAction>(DeerAction()), y, x);
-						} else if (type == "HareAction") {
-							table.addWithoutCheck(make_shared<HareAction>(HareAction()), y, x);
-						} else if (type == "MooseAction") {
-							table.addWithoutCheck(make_shared<MooseAction>(MooseAction()), y, x);
-						} else if (type == "WolfAction") {
-							table.addWithoutCheck(make_shared<WolfAction>(WolfAction()), y, x);
-						}
-						
+						table.addWithoutCheck(getCardFromXml(cardElem), y, x);
 					}
-					
-				} else {
+				}
+				else {
 					cout << " >> [FileLoadingExeption}: It seems that an error ocured while trying to load you saved game. Try loading another file." << endl;
 				}
 			} while (!fileLoaded);
-			
-		} else {
+
+		}
+		else {
 			deck = AnimalCardFactory::getFactory()->getDeck(); // Creates a deck with new cards.
 			bool ready = false;
 			cout << endl << "Enter the players' names (Leave empty to start game):" << endl;
-			
+
 			// Random Secret Animal
 			vector<Animal> secretAnimals = vector<Animal>();
 			secretAnimals.push_back(Animal::BEAR);
@@ -218,8 +222,8 @@ int main() {
 			secretAnimals.push_back(Animal::HARE);
 			secretAnimals.push_back(Animal::MOOSE);
 			secretAnimals.push_back(Animal::WOLF);
-			shuffle(begin(secretAnimals), end(secretAnimals), default_random_engine((int) time(0)));
-			
+			shuffle(begin(secretAnimals), end(secretAnimals), default_random_engine((int)time(0)));
+
 			do {
 				cout << " >> Name: ";
 				string playerName;
@@ -233,10 +237,12 @@ int main() {
 						players[numPlayers] = new Player(playerName, secretAnimals.back());
 						secretAnimals.pop_back();
 						numPlayers++;
-					} else {
+					}
+					else {
 						cout << " >> This name is already choosen!" << endl;
 					}
-				} else {
+				}
+				else {
 					// Make sure all the players have different names.
 					if (numPlayers < 2) cout << " >> At least 2 players are required to play!" << endl;
 					else ready = true;
@@ -244,7 +250,7 @@ int main() {
 			} while (numPlayers < 5 && !ready);
 			for (int i = 0; i < numPlayers && playing; i++) {
 				Player * player = players[i];
-				for (int j = 0; j < 20; j++) {
+				for (int j = 0; j < 3; j++) {
 					player->getHand() += deck.draw();
 				}
 			}
@@ -278,216 +284,87 @@ int main() {
 						string cardNumStr;
 						getline(cin, cardNumStr);
 						if (cardNumStr == "skip" || cardNumStr == "save") {
-							
+
 							if (cardNumStr == "skip") {
 								cardNumValid = true;
 								skipTurn = true;
 								turnOver = true;
 								cout << " >> Turn skipped!" << endl;
-							} else {
-								
+							}
+							else {
+
 								bool saved = false;
 								do {
-									
+
 									string dir, fileName;
-									
+
 									cout << " >> Enter the location of where you want to save your file: ";
 									getline(cin, dir);
 									cout << " >> Enter the name of your save file: ";
 									getline(cin, fileName);
-									
+
 									string fullPath = dir + ((dir[dir.length() - 1] == '/') ? "" : "/") + fileName;
-									
 									TiXmlDocument saveDocument = TiXmlDocument(fullPath.c_str());
 									TiXmlElement fiveAnimals = TiXmlElement("FiveAnimals");
 									fiveAnimals.SetAttribute("startPlayer", i);
-									
-									
+
+
 									for (int p = 0; p < numPlayers; p++) {
 										TiXmlElement playerNode = TiXmlElement("Player");
-										
+
 										playerNode.SetAttribute("name", players[p]->getName().c_str());
 										playerNode.SetAttribute("secretAnimal", getAnimalString(players[p]->getSecretAnimal()).c_str());
-										
+
 										TiXmlElement hand = TiXmlElement("Hand");
 										for (int c = 0; c < players[p]->getHand().numCards(); c++) {
-											TiXmlElement card = TiXmlElement("Card");
-											AnimalCard* aCard = players[p]->getHand()[c].get();
-											string type = "";
-											
-											if (dynamic_cast<Joker*>(aCard)) {
-												type = "Joker";
-											} else if (dynamic_cast<BearAction*>(aCard)) {
-												type = "BearAction";
-											} else if (dynamic_cast<DeerAction*>(aCard)) {
-												type = "DeerAction";
-											} else if (dynamic_cast<HareAction*>(aCard)) {
-												type = "HareAction";
-											} else if (dynamic_cast<MooseAction*>(aCard)) {
-												type = "MooseAction";
-											} else if (dynamic_cast<WolfAction*>(aCard)) {
-												type = "WolfAction";
-											} else if (dynamic_cast<StartCard*>(aCard)) {
-												type = "StartCard";
-											} else if (dynamic_cast<NoSplit*>(aCard)) {
-												type = "NoSplit";
-											} else if (dynamic_cast<SplitTwo*>(aCard)) {
-												type = "SplitTwo";
-											} else if (dynamic_cast<SplitThree*>(aCard)) {
-												type = "SplitThree";
-											} else if (dynamic_cast<SplitFour*>(aCard)) {
-												type = "SplitFour";
-											}
-											
-											string animals = "x,x,x,x";
-											if (dynamic_cast<ActionCard*>(aCard)) {
-												animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
-												animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
-												animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
-												animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
-											} else {
-												animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
-												animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
-												animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
-												animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
-											}
-											
-											card.SetAttribute("type", type.c_str());
-											card.SetAttribute("animals", animals.c_str());
-											
+											TiXmlElement card = getXMLCard(players[p]->getHand()[c].get());
 											hand.InsertEndChild(card);
 										}
-										
+
 										playerNode.InsertEndChild(hand);
 										fiveAnimals.InsertEndChild(playerNode);
 									}
-									
+
 									TiXmlElement deckElem = TiXmlElement("Deck");
 									for (int c = 0; c < deck.size(); c++) {
-										TiXmlElement card = TiXmlElement("Card");
-										AnimalCard* aCard = deck.draw().get();
-										string type = "";
-										
-										if (dynamic_cast<Joker*>(aCard)) {
-											type = "Joker";
-										} else if (dynamic_cast<BearAction*>(aCard)) {
-											type = "BearAction";
-										} else if (dynamic_cast<DeerAction*>(aCard)) {
-											type = "DeerAction";
-										} else if (dynamic_cast<HareAction*>(aCard)) {
-											type = "HareAction";
-										} else if (dynamic_cast<MooseAction*>(aCard)) {
-											type = "MooseAction";
-										} else if (dynamic_cast<WolfAction*>(aCard)) {
-											type = "WolfAction";
-										} else if (dynamic_cast<StartCard*>(aCard)) {
-											type = "StartCard";
-										} else if (dynamic_cast<NoSplit*>(aCard)) {
-											type = "NoSplit";
-										} else if (dynamic_cast<SplitTwo*>(aCard)) {
-											type = "SplitTwo";
-										} else if (dynamic_cast<SplitThree*>(aCard)) {
-											type = "SplitThree";
-										} else if (dynamic_cast<SplitFour*>(aCard)) {
-											type = "SplitFour";
-										}
-										
-										string animals = "x,x,x,x";
-										if (dynamic_cast<ActionCard*>(aCard)) {
-											animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
-											animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
-											animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
-											animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
-										} else {
-											animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
-											animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
-											animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
-											animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
-										}
-										
-										card.SetAttribute("type", type.c_str());
-										card.SetAttribute("animals", animals.c_str());
-										
+										TiXmlElement card = getXMLCard(deck.draw().get());
 										deckElem.InsertEndChild(card);
 									}
 									fiveAnimals.InsertEndChild(deckElem);
-									
+
 									TiXmlElement tableElem = TiXmlElement("Table");
 									for (int x = 0; x < 103; x++) {
 										for (int y = 0; y < 103; y++) {
-											
-											AnimalCard* aCard = table.get(y, x).get();
-											
+											AnimalCard * aCard = table.get(y, x).get();
 											if (aCard != nullptr) {
-												
-												TiXmlElement card = TiXmlElement("Card");
-												string type = "";
-												
-												if (dynamic_cast<Joker*>(aCard)) {
-													type = "Joker";
-												} else if (dynamic_cast<BearAction*>(aCard)) {
-													type = "BearAction";
-												} else if (dynamic_cast<DeerAction*>(aCard)) {
-													type = "DeerAction";
-												} else if (dynamic_cast<HareAction*>(aCard)) {
-													type = "HareAction";
-												} else if (dynamic_cast<MooseAction*>(aCard)) {
-													type = "MooseAction";
-												} else if (dynamic_cast<WolfAction*>(aCard)) {
-													type = "WolfAction";
-												} else if (dynamic_cast<StartCard*>(aCard)) {
-													type = "StartCard";
-												} else if (dynamic_cast<NoSplit*>(aCard)) {
-													type = "NoSplit";
-												} else if (dynamic_cast<SplitTwo*>(aCard)) {
-													type = "SplitTwo";
-												} else if (dynamic_cast<SplitThree*>(aCard)) {
-													type = "SplitThree";
-												} else if (dynamic_cast<SplitFour*>(aCard)) {
-													type = "SplitFour";
-												}
-												
-												string animals = "x,x,x,x";
-												if (dynamic_cast<ActionCard*>(aCard)) {
-													animals[0] = toupper(getAnimalChar(aCard->getAnimal(0, 0)));
-													animals[2] = toupper(getAnimalChar(aCard->getAnimal(0, 1)));
-													animals[4] = toupper(getAnimalChar(aCard->getAnimal(1, 0)));
-													animals[6] = toupper(getAnimalChar(aCard->getAnimal(1, 1)));
-												} else {
-													animals[0] = getAnimalChar(aCard->getAnimal(0, 0));
-													animals[2] = getAnimalChar(aCard->getAnimal(0, 1));
-													animals[4] = getAnimalChar(aCard->getAnimal(1, 0));
-													animals[6] = getAnimalChar(aCard->getAnimal(1, 1));
-												}
-												
+												TiXmlElement card = getXMLCard(aCard);
 												card.SetAttribute("x", x);
 												card.SetAttribute("y", y);
-												card.SetAttribute("type", type.c_str());
-												card.SetAttribute("animals", animals.c_str());
-												
+
 												tableElem.InsertEndChild(card);
 											}
 										}
 									}
 									fiveAnimals.InsertEndChild(tableElem);
-									
-									
+
+
 									saveDocument.InsertEndChild(fiveAnimals);
 									saveDocument.SaveFile();
-									
+
 									// Exit out of the game.
 									turnOver = true;
 									skipTurn = true;
 									cardNumValid = true;
 									saved = true;
 									playing = false;
-									
+
 									cout << " >> Game Saved!";
-									
+
 								} while (!saved);
-								
+
 							}
-						} else {
+						}
+						else {
 							try {
 								cardNum = stoi(cardNumStr);
 								cardNumValid = true;
@@ -601,7 +478,8 @@ int main() {
 						cout << endl << player->getName() << "'s Turn is over.." << endl;
 
 					}
-				} catch (string e) {
+				}
+				catch (string e) {
 					cout << " >> [" << e << "]: It seems that an error ocured, play your turn again!";
 					turnOver = false;
 				}
@@ -621,10 +499,11 @@ int main() {
 
 		}
 	}
-	
+
 	for (int i = 0; i < numPlayers; i++) {
 		delete players[i];
 	}
-	
+
 	return 0;
 }
+

@@ -99,7 +99,7 @@ TiXmlElement  getXMLCard(AnimalCard* aCard) {
 		else if (dynamic_cast<WolfAction*>(aCard)) {
 			type = "WolfAction";
 		}
-		else if (dynamic_cast<StartCard*>(aCard) || aCard->getAnimal(0,0) == Animal::START) {
+		else if (dynamic_cast<StartCard*>(aCard)) {
 			type = "StartCard";
 		}
 		else if (dynamic_cast<NoSplit*>(aCard)) {

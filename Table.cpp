@@ -18,7 +18,7 @@ Table::Table() {
 	for (int i = 0; i < 103; i++) {
 		table[i] = new shared_ptr<AnimalCard>[103];
 	}
-	table[startRow][startCol] = make_shared<AnimalCard>(StartCard());
+	table[startRow][startCol] = make_shared<StartCard>(StartCard());
 	minRow = 103, minCol = 103;
 	maxRow = 0, maxCol = 0;
 	setRange();
